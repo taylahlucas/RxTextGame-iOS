@@ -1,0 +1,6 @@
+framework module Pods_TextGameAdventures {
+  umbrella header "Pods-TextGameAdventures-umbrella.h"
+
+  export *
+  module * { export * }
+}
