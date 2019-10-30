@@ -19,6 +19,7 @@
 		60EAF9D72369129000058281 /* MapObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EAF9D62369129000058281 /* MapObject.swift */; };
 		60EAF9D9236917F200058281 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 60EAF9D8236917F200058281 /* README.md */; };
 		6F0EC3A703BA766BBB045A34 /* Pods_TextGameAdventuresTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B75442E7337FA42E7950EBC /* Pods_TextGameAdventuresTests.framework */; };
+		D009798B23693535000A5C34 /* StartPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D009798A23693535000A5C34 /* StartPageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		60EAF9D8236917F200058281 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		7609A005AFCE190D86ABB37F /* Pods-TextGameAdventures.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextGameAdventures.release.xcconfig"; path = "Target Support Files/Pods-TextGameAdventures/Pods-TextGameAdventures.release.xcconfig"; sourceTree = "<group>"; };
 		94FEB10C3BB84CC941B8008C /* Pods-TextGameAdventuresTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextGameAdventuresTests.debug.xcconfig"; path = "Target Support Files/Pods-TextGameAdventuresTests/Pods-TextGameAdventuresTests.debug.xcconfig"; sourceTree = "<group>"; };
+		D009798A23693535000A5C34 /* StartPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPageViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,15 +100,15 @@
 		60EAF9AF23690CE200058281 /* TextGameAdventures */ = {
 			isa = PBXGroup;
 			children = (
+				D0097989236934DD000A5C34 /* Models */,
+				D0097988236934D1000A5C34 /* ViewModels */,
+				D0097987236934C6000A5C34 /* Views */,
 				60EAF9B023690CE200058281 /* AppDelegate.swift */,
 				60EAF9B223690CE200058281 /* SceneDelegate.swift */,
 				60EAF9B623690CE200058281 /* Main.storyboard */,
 				60EAF9B923690CE500058281 /* Assets.xcassets */,
 				60EAF9BB23690CE500058281 /* LaunchScreen.storyboard */,
 				60EAF9BE23690CE500058281 /* Info.plist */,
-				60EAF9D223690D6B00058281 /* GameViewController.swift */,
-				60EAF9D423690D7700058281 /* GameViewModel.swift */,
-				60EAF9D62369129000058281 /* MapObject.swift */,
 			);
 			path = TextGameAdventures;
 			sourceTree = "<group>";
@@ -129,6 +131,31 @@
 				21EC8DAA94A1A76A4727B3F1 /* Pods-TextGameAdventuresTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		D0097987236934C6000A5C34 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				60EAF9D223690D6B00058281 /* GameViewController.swift */,
+				D009798A23693535000A5C34 /* StartPageViewController.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D0097988236934D1000A5C34 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				60EAF9D423690D7700058281 /* GameViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		D0097989236934DD000A5C34 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				60EAF9D62369129000058281 /* MapObject.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		FC393F5E9A4C6293A75B56D3 /* Frameworks */ = {
@@ -313,6 +340,7 @@
 				60EAF9D72369129000058281 /* MapObject.swift in Sources */,
 				60EAF9B123690CE200058281 /* AppDelegate.swift in Sources */,
 				60EAF9D523690D7700058281 /* GameViewModel.swift in Sources */,
+				D009798B23693535000A5C34 /* StartPageViewController.swift in Sources */,
 				60EAF9B323690CE200058281 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

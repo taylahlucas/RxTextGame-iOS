@@ -57,7 +57,12 @@ class GameViewController: UIViewController {
         button.setTitle("LEFT", for: .normal)
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.white.cgColor
+    
+        button.rx.tap
+            .bind(to: viewModel.leftButtonTapped)
+            .disposed(by: disposeBag)
         
+
         return button
     }()
     
@@ -68,6 +73,10 @@ class GameViewController: UIViewController {
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.white.cgColor
         
+        button.rx.tap
+            .bind(to: viewModel.downButtonTapped)
+            .disposed(by: disposeBag)
+        
         return button
     }()
     
@@ -77,6 +86,10 @@ class GameViewController: UIViewController {
         button.setTitle("RIGHT", for: .normal)
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.white.cgColor
+        
+        button.rx.tap
+            .bind(to: viewModel.rightButtonTapped)
+            .disposed(by: disposeBag)
         
         return button
     }()
@@ -148,7 +161,6 @@ class GameViewController: UIViewController {
     // MARK: - Binding
     
     private func setupBinding() {
-        
         viewModel.description
             .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
             .observeOn(MainScheduler.instance)
