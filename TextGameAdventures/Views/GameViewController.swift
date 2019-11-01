@@ -10,15 +10,32 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+extension UIButton {
+    func setTitleAndBackgroundColor(_ titleColor: UIColor, backgroundColor: UIColor, for state: UIControlState) {
+        self.setTitleColor(titleColor, for: state)
+        self.setBackgroundImage(backgroundColor.toImage(), for: state)
+        self.layer.borderColor = UIColor.white.cgColor
+    }
+}
+
 class GameViewController: UIViewController {
     private let viewModel: GameViewModel = GameViewModel()
     private let disposeBag: DisposeBag = DisposeBag()
-    
+
     // MARK: - UI
     
     lazy var nameLabel: UILabel = {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.white
+        
+        UserDefaults.standard.rx.observe(String.self, "playerName")
+            .subscribe(onNext: { [weak self] (playerName) in
+                if let playerName = playerName {
+                    label.text = playerName
+                }
+            })
+        .disposed(by: disposeBag)
         
         return label
     }()
@@ -26,6 +43,8 @@ class GameViewController: UIViewController {
     lazy var statusLabel: UILabel = {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Status"
+        label.textColor = UIColor.white
         
         return label
     }()
@@ -33,6 +52,7 @@ class GameViewController: UIViewController {
     lazy var descLabel: UILabel = {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.white
         
         return label
     }()
@@ -40,12 +60,30 @@ class GameViewController: UIViewController {
     lazy var upButton: UIButton = {
         let button: UIButton = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("UP", for: .normal)
+        button.setTitle("U", for: .normal)
         button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.white.cgColor
+        
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
+        
+        button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
+        
+//        button.rx.tap
+//            .bind(to: viewModel.upButtonTapped)
+//            .disposed(by: disposeBag)
+
+        viewModel.upSelected
+            .asObservable()
+            .bind(to: button.rx.isSelected)
+            .disposed(by: disposeBag)
         
         button.rx.tap
-            .bind(to: viewModel.upButtonTapped)
+            .subscribe(onNext: { self.viewModel.upSelected.value = !self.viewModel.upSelected.value })
+            .disposed(by: disposeBag)
+        
+        viewModel.upButtonEnabled
+            .bind(to: button.rx.isEnabled)
             .disposed(by: disposeBag)
         
         return button
@@ -54,14 +92,31 @@ class GameViewController: UIViewController {
     lazy var leftButton: UIButton = {
         let button: UIButton = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("LEFT", for: .normal)
+        button.setTitle("L", for: .normal)
         button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.white.cgColor
+
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
+        
+        button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
     
-        button.rx.tap
-            .bind(to: viewModel.leftButtonTapped)
+//        button.rx.tap
+//            .bind(to: viewModel.leftButtonTapped)
+//            .disposed(by: disposeBag)
+        
+        viewModel.leftSelected
+            .asObservable()
+            .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
         
+        button.rx.tap
+            .subscribe(onNext: { self.viewModel.leftSelected.value = !self.viewModel.leftSelected.value })
+            .disposed(by: disposeBag)
+        
+        viewModel.leftButtonEnabled
+            .bind(to: button.rx.isEnabled)
+            .disposed(by: disposeBag)
 
         return button
     }()
@@ -69,28 +124,60 @@ class GameViewController: UIViewController {
     lazy var downButton: UIButton = {
         let button: UIButton = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("DOWN", for: .normal)
+        button.setTitle("D", for: .normal)
         button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.white.cgColor
         
-        button.rx.tap
-            .bind(to: viewModel.downButtonTapped)
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
+        
+        button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
+        
+//        button.rx.tap
+//            .bind(to: viewModel.downButtonTapped)
+//            .disposed(by: disposeBag)
+        
+        viewModel.downSelected
+            .asObservable()
+            .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
         
+        button.rx.tap
+            .subscribe(onNext: {self.viewModel.downSelected.value = !self.viewModel.downSelected.value})
+            .disposed(by: disposeBag)
+        
+        viewModel.downButtonEnabled
+            .bind(to: button.rx.isEnabled)
+            .disposed(by: disposeBag)
+  
         return button
     }()
     
     lazy var rightButton: UIButton = {
         let button: UIButton = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("RIGHT", for: .normal)
+        button.setTitle("R", for: .normal)
         button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.white.cgColor
         
-        button.rx.tap
-            .bind(to: viewModel.rightButtonTapped)
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
+        
+        button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
+        
+        viewModel.rightSelected
+            .asObservable()
+            .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
         
+        button.rx.tap
+            .subscribe(onNext: {self.viewModel.rightSelected.value = !self.viewModel.rightSelected.value})
+            .disposed(by: disposeBag)
+        
+        viewModel.rightButtonEnabled
+            .bind(to: button.rx.isEnabled)
+            .disposed(by: disposeBag)
+
         return button
     }()
     
@@ -99,8 +186,17 @@ class GameViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("ACTION", for: .normal)
         button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.white.cgColor
         
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .highlighted)
+        
+        button.addTarget(self, action: #selector(playerAction(_:)), for: .touchUpInside)
+        
+        viewModel.actionButtonEnabled
+            .bind(to: button.rx.isEnabled)
+            .disposed(by: disposeBag)
+
         return button
     }()
     
@@ -121,7 +217,6 @@ class GameViewController: UIViewController {
         view.addSubview(actionButton)
         
         setupLayout()
-        setupBinding()
     }
     
     // MARK: - Layout
@@ -155,18 +250,33 @@ class GameViewController: UIViewController {
             upButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             upButton.bottomAnchor.constraint(equalTo: rightButton.topAnchor, constant: -20)
         ])
-        
     }
     
-    // MARK: - Binding
+    // MARK: - Button Functions
     
-    private func setupBinding() {
-        viewModel.description
-            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
-            .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [weak self] description in
-                self?.descLabel.text = description
-            })
-            .disposed(by: disposeBag)
+    @objc func setButtonSelected(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+//        DispatchQueue.main.async {
+//            if (sender.isSelected) {
+//                sender.layer.borderColor = UIColor.purple.cgColor
+//            } else {
+//                sender.layer.borderColor = UIColor.white.cgColor
+//            }
+//        }
+    }
+    
+    @objc func playerAction(_ sender: UIButton) {
+        print("player action")
+        sender.isSelected = !sender.isSelected
+        
+        if (viewModel.upSelected.value) {
+            viewModel.setCurrentPosition(direction: "up")
+        } else if (viewModel.leftSelected.value) {
+            print("left")
+        } else if (viewModel.rightSelected.value) {
+            print("right")
+        } else if (viewModel.downSelected.value) {
+            print("down")
+        }
     }
 }

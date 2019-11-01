@@ -10,9 +10,22 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+extension UIColor {
+   func toImage() -> UIImage {
+       let bounds: CGRect = CGRect(x: 0, y: 0, width: 1, height: 1)
+       let renderer: UIGraphicsImageRenderer = UIGraphicsImageRenderer(bounds: bounds)
+       return renderer.image { rendererContext in
+           rendererContext.cgContext.setFillColor(self.cgColor)
+           rendererContext.cgContext.fill(bounds)
+       }
+   }
+}
+
 class StartPageViewController: UIViewController {
-    private let viewModel: GameViewModel = GameViewModel()
+    private let viewModel: StartPageViewModel = StartPageViewModel()
     private let disposeBag: DisposeBag = DisposeBag()
+    
+    // MARK: - UI
     
     private let mainStack: UIStackView = {
         let view: UIStackView = UIStackView()
@@ -42,9 +55,8 @@ class StartPageViewController: UIViewController {
         input.placeholder = "Name"
         input.returnKeyType = .done
 
-        input.rx.text
-            .orEmpty
-            .asObservable()
+        input.rx.controlEvent(.allEditingEvents)
+            .map { _ in input.text}
             .bind(to: viewModel.playerNameEntered)
             .disposed(by: disposeBag)
 
@@ -54,15 +66,19 @@ class StartPageViewController: UIViewController {
     private lazy var startButton: UIButton = {
         let button: UIButton = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Start Game", for: .normal)
-        button.titleLabel?.textColor = UIColor.white
-        
-        button.backgroundColor = UIColor.lightGray
         button.layer.cornerRadius = 10
         button.layer.masksToBounds = true
+        button.isEnabled = false
+        button.setTitle("Start Game", for: .normal)
+        button.titleLabel?.textColor = UIColor.white
+        button.setBackgroundImage(UIColor.toImage(UIColor.lightGray)(), for: .disabled)
+        button.setBackgroundImage(UIColor.toImage(UIColor.purple)(), for: .normal)
+        button.addTarget(self, action: #selector(startGame(_:)), for: .touchUpInside)
         
-        button.addTarget(self, action: #selector(startGame), for: .touchUpInside)
-        
+        viewModel.buttonIsEnabled
+            .bind(to: button.rx.isEnabled)
+            .disposed(by: disposeBag)
+    
         return button
     }()
 
@@ -70,8 +86,9 @@ class StartPageViewController: UIViewController {
         super.viewDidLoad()
 
         setupLayout()
-        setupBinding()
     }
+    
+    // MARK: - Functions
     
     func setupLayout() {
         view.backgroundColor = UIColor.darkGray
@@ -97,22 +114,8 @@ class StartPageViewController: UIViewController {
             startButton.heightAnchor.constraint(equalToConstant: 72),
         ])
     }
-    
-    func setupBinding() {
-        viewModel.playerName
-            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
-            .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [weak self] playerName in
-                self?.nameField.text = playerName
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    @objc func startGame() {
-        print("starting game")
-    }
-    
-    @objc func nameEntered() {
-        print("name entered")
+
+    @objc func startGame(_ sender: UIButton) {
+        self.present(GameViewController(), animated: true, completion: nil)
     }
 }
