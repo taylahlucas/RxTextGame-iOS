@@ -21,6 +21,7 @@ extension UIButton {
 class GameViewController: UIViewController {
     private let viewModel: GameViewModel = GameViewModel()
     private let disposeBag: DisposeBag = DisposeBag()
+    
 
     // MARK: - UI
     
@@ -43,7 +44,7 @@ class GameViewController: UIViewController {
     lazy var statusLabel: UILabel = {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Status"
+        label.text = "Healthy"
         label.textColor = UIColor.white
         
         return label
@@ -252,26 +253,60 @@ class GameViewController: UIViewController {
     }
     
     func setupBindings() {
-        viewModel.currentPosition
-            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
-            .observeOn(MainScheduler.instance)
-            .subscribe({ (value) in
-                self.descLabel.text = value.element?.description
-            })
-            .disposed(by: disposeBag)
         
         viewModel.actionButtonSelected
             .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
             .observeOn(MainScheduler.instance)
-            .subscribe({ _ in self.viewModel.resetValues() })
+            .subscribe({ [weak self] _ in self?.viewModel.resetValues() })
+            .disposed(by: disposeBag)
+        
+        viewModel.isInTrap
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+            .subscribe({ [weak self] (value) in
+                if (value.element ?? false) {
+                    self?.descLabel.text = "In Trap"
+                    
+                    if (self?.viewModel.currentStatus == .healthy) {
+                        self?.statusLabel.text = "Injured"
+                        self?.viewModel.setCurrentStatus(status: .injured)
+                    }
+                    else if (self?.viewModel.currentStatus == .injured) {
+                        self?.statusLabel.text = "Dead"
+                        
+                        self?.viewModel.setCurrentStatus(status: .dead)
+                        let endString: String = "GAME OVER " + (self?.viewModel.playerName ?? "") + ", YOU DIED!"
+                        
+                        self?.viewModel.resetGame(endString: endString)
+                        self?.present(EndGameViewController(), animated: true, completion: nil)
+                    }
+                }
+                else {
+                    self?.descLabel.text = ""
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.didFindChest
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.asyncInstance)
+            .subscribe({ [weak self] (value) in
+                if (value.element ?? false) {
+                    self?.descLabel.text = "Found Chest"
+                    self?.viewModel.addChest()
+                }
+            })
             .disposed(by: disposeBag)
 
         viewModel.isGameFinished
             .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
-            .observeOn(MainScheduler.instance)
-            .subscribe({ (value) in
+            .observeOn(MainScheduler.asyncInstance)
+            .subscribe({ [weak self] (value) in
                 if (value.element ?? false) {
-                    self.descLabel.text = "GAME OVER"
+                    let endString: String = "CONGRATULATIONS " + (self?.viewModel.playerName ?? "") + ", YOU SURVIVED!"
+                    
+                    self?.viewModel.resetGame(endString: endString)
+                    self?.present(EndGameViewController(), animated: true, completion: nil)
                 }
             })
             .disposed(by: disposeBag)

@@ -21,6 +21,9 @@
 		6F0EC3A703BA766BBB045A34 /* Pods_TextGameAdventuresTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B75442E7337FA42E7950EBC /* Pods_TextGameAdventuresTests.framework */; };
 		D0093A2B236B9A0300390515 /* StartPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0093A2A236B9A0300390515 /* StartPageViewModel.swift */; };
 		D009798B23693535000A5C34 /* StartPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D009798A23693535000A5C34 /* StartPageViewController.swift */; };
+		D0C0C41A23725B63001A1667 /* HealthObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C0C41923725B62001A1667 /* HealthObject.swift */; };
+		D0C0C41C237270C9001A1667 /* EndGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C0C41B237270C9001A1667 /* EndGameViewController.swift */; };
+		D0C0C41E23727F0C001A1667 /* EndGameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C0C41D23727F0C001A1667 /* EndGameViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +59,9 @@
 		94FEB10C3BB84CC941B8008C /* Pods-TextGameAdventuresTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextGameAdventuresTests.debug.xcconfig"; path = "Target Support Files/Pods-TextGameAdventuresTests/Pods-TextGameAdventuresTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D0093A2A236B9A0300390515 /* StartPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPageViewModel.swift; sourceTree = "<group>"; };
 		D009798A23693535000A5C34 /* StartPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPageViewController.swift; sourceTree = "<group>"; };
+		D0C0C41923725B62001A1667 /* HealthObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthObject.swift; sourceTree = "<group>"; };
+		D0C0C41B237270C9001A1667 /* EndGameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndGameViewController.swift; sourceTree = "<group>"; };
+		D0C0C41D23727F0C001A1667 /* EndGameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndGameViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +146,7 @@
 			children = (
 				60EAF9D223690D6B00058281 /* GameViewController.swift */,
 				D009798A23693535000A5C34 /* StartPageViewController.swift */,
+				D0C0C41B237270C9001A1667 /* EndGameViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -149,6 +156,7 @@
 			children = (
 				60EAF9D423690D7700058281 /* GameViewModel.swift */,
 				D0093A2A236B9A0300390515 /* StartPageViewModel.swift */,
+				D0C0C41D23727F0C001A1667 /* EndGameViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -157,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				60EAF9D62369129000058281 /* MapObject.swift */,
+				D0C0C41923725B62001A1667 /* HealthObject.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -341,11 +350,14 @@
 			files = (
 				D0093A2B236B9A0300390515 /* StartPageViewModel.swift in Sources */,
 				60EAF9D323690D6B00058281 /* GameViewController.swift in Sources */,
+				D0C0C41A23725B63001A1667 /* HealthObject.swift in Sources */,
 				60EAF9D72369129000058281 /* MapObject.swift in Sources */,
 				60EAF9B123690CE200058281 /* AppDelegate.swift in Sources */,
 				60EAF9D523690D7700058281 /* GameViewModel.swift in Sources */,
+				D0C0C41E23727F0C001A1667 /* EndGameViewModel.swift in Sources */,
 				D009798B23693535000A5C34 /* StartPageViewController.swift in Sources */,
 				60EAF9B323690CE200058281 /* SceneDelegate.swift in Sources */,
+				D0C0C41C237270C9001A1667 /* EndGameViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -28,13 +28,15 @@ class GameViewModel {
     
     private let disposeBag: DisposeBag = DisposeBag()
     
-    let gameMap: [[MapObject]] = [
+    let gameMapInitial: [[MapObject]] = [
         [.start, .none, .none, .chest],
         [.path, .path, .path, .path],
         [.path, .trap, .path, .none],
         [.path, .none, .path, .trap],
         [.path, .trap, .path, .finish]
     ]
+    
+    lazy var gameMap: [[MapObject]] = gameMapInitial
     
     lazy var maxCol: Int = {
         return self.gameMap[0].count-1
@@ -44,9 +46,24 @@ class GameViewModel {
         return self.gameMap.count-1
     }()
     
+    lazy var playerName: String = {
+        return (UserDefaults.standard.string(forKey: "playerName") ?? "")
+    }()
+    
     // MARK: - Actions
 
     var currentPosition: BehaviorRelay<[Int]> = BehaviorRelay<[Int]>(value: [0, 0])
+    var currentStatus: HealthObject = .healthy
+    
+    var chestsCollected: Int = 0
+    
+    lazy var totalChests: Int = {
+        var count: Int = 0
+        for row in gameMapInitial {
+            count += row.filter({ $0 == .chest }).count
+        }
+        return count
+    }()
     
     lazy var upSelected = Variable(false)
     lazy var downSelected = Variable(false)
@@ -77,24 +94,8 @@ class GameViewModel {
         currentPosition
             .map { position -> Bool in
                 guard (position[0]+1 <= self.maxRow) else { return false }
-                if (self.getPosValue(position: [position[0]+1, position[1]]) == .path) {
-                    return true
-                }
-                else if (self.getPosValue(position: [position[0]+1, position[1]]) == .finish) {
-                    return true
-                }
-                return false
-            }
-    }()
-    
-    lazy var leftButtonEnabled: Observable<Bool> = {
-        currentPosition
-            .map { position -> Bool in
-                guard (position[1]-1 >= 0) else { return false }
-                if (self.getPosValue(position: [position[0], position[1]-1]) == .path) {
-                    return true
-                }
-                else if (self.getPosValue(position: [position[0], position[1]-1]) == .finish) {
+                let position = self.getPosValue(position: [position[0]+1, position[1]])
+                if (position != .none) {
                     return true
                 }
                 return false
@@ -105,10 +106,8 @@ class GameViewModel {
         currentPosition
             .map { position -> Bool in
                 guard (position[0]-1 >= 0) else { return false }
-                if (self.getPosValue(position: [position[0]-1, position[1]]) == .path) {
-                    return true
-                }
-                else if (self.getPosValue(position: [position[0]-1, position[1]]) == .finish) {
+                let position = self.getPosValue(position: [position[0]-1, position[1]])
+                if (position != .none) {
                     return true
                 }
                 return false
@@ -119,10 +118,20 @@ class GameViewModel {
         currentPosition
             .map { position -> Bool in
                 guard (position[1]+1 <= self.maxCol) else { return false }
-                if (self.getPosValue(position: [position[0], position[1]+1]) == .path) {
+                let position = self.getPosValue(position: [position[0], position[1]+1])
+                if (position != .none) {
                     return true
                 }
-                else if (self.getPosValue(position: [position[0], position[1]+1]) == .finish) {
+                return false
+            }
+    }()
+    
+    lazy var leftButtonEnabled: Observable<Bool> = {
+        currentPosition
+            .map { position -> Bool in
+                guard (position[1]-1 >= 0) else { return false }
+                let position = self.getPosValue(position: [position[0], position[1]-1])
+                if (position != .none) {
                     return true
                 }
                 return false
@@ -144,7 +153,32 @@ class GameViewModel {
             .asObservable()
             .map { selected in return selected }
     }()
-
+    
+    
+    lazy var getCurrentStatus: Observable<HealthObject> = {
+        return Observable.just(currentStatus)
+    }()
+    
+    lazy var isInTrap: Observable<Bool> = {
+        currentPosition
+            .map{ position -> Bool in
+                if (self.getPosValue(position: position) == .trap) {
+                    return true
+                }
+                return false
+        }
+    }()
+    
+    lazy var didFindChest: Observable<Bool> = {
+        currentPosition
+            .map{ position -> Bool in
+                if (self.getPosValue(position: position) == .chest) {
+                    return true
+                }
+                return false
+        }
+    }()
+    
     lazy var isGameFinished: Observable<Bool> = {
         currentPosition
             .map{ position -> Bool in
@@ -154,7 +188,7 @@ class GameViewModel {
                 return false
         }
     }()
-    
+
     // MARK: - Functions
     
     func getPosValue(position: [Int]) -> MapObject {
@@ -174,6 +208,19 @@ class GameViewModel {
         else if (direction == 4) {                          // Left
             currentPosition.insert(currentPosition.value[1] - 1, at: 1)
         }
+        else {                                      // Reset to initial pos
+            currentPosition.insert(0, at: 0)
+            currentPosition.insert(0, at: 1)
+        }
+    }
+    
+    func setCurrentStatus(status: HealthObject) {
+        self.currentStatus = status
+    }
+    
+    func addChest() {
+        self.chestsCollected += 1
+        self.gameMap[currentPosition.value[0]][currentPosition.value[1]] = .path
     }
     
     func resetValues() {
@@ -181,5 +228,15 @@ class GameViewModel {
         self.downSelected.value = false
         self.rightSelected.value = false
         self.leftSelected.value = false
+    }
+    
+    func resetGame(endString: String) {
+        gameMap = gameMapInitial
+        setCurrentPosition(direction: 0)
+        setCurrentStatus(status: .healthy)
+        
+        UserDefaults.standard.set(endString, forKey: "endMessage")
+        UserDefaults.standard.set(chestsCollected, forKey: "chestsCollected")
+        UserDefaults.standard.set(totalChests, forKey: "totalChests")
     }
 }
