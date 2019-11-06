@@ -256,8 +256,14 @@ class GameViewController: UIViewController {
             .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
             .observeOn(MainScheduler.instance)
             .subscribe({ (value) in
-                print("current position: ", value)
+                self.descLabel.text = value.element?.description
             })
+            .disposed(by: disposeBag)
+        
+        viewModel.actionButtonSelected
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+            .subscribe({ _ in self.viewModel.resetValues() })
             .disposed(by: disposeBag)
 
         viewModel.isGameFinished
@@ -293,8 +299,6 @@ class GameViewController: UIViewController {
         else if (viewModel.leftSelected.value) {
             viewModel.setCurrentPosition(direction: 4)
         }
-    
-        viewModel.resetValues()
     }
 
 }
