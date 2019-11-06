@@ -69,17 +69,13 @@ class GameViewController: UIViewController {
         
         button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
         
-//        button.rx.tap
-//            .bind(to: viewModel.upButtonTapped)
-//            .disposed(by: disposeBag)
-
+        button.rx.tap
+            .subscribe(onNext: { self.viewModel.upSelected.value = !self.viewModel.upSelected.value })
+            .disposed(by: disposeBag)
+        
         viewModel.upSelected
             .asObservable()
             .bind(to: button.rx.isSelected)
-            .disposed(by: disposeBag)
-        
-        button.rx.tap
-            .subscribe(onNext: { self.viewModel.upSelected.value = !self.viewModel.upSelected.value })
             .disposed(by: disposeBag)
         
         viewModel.upButtonEnabled
@@ -101,17 +97,13 @@ class GameViewController: UIViewController {
         
         button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
     
-//        button.rx.tap
-//            .bind(to: viewModel.leftButtonTapped)
-//            .disposed(by: disposeBag)
+        button.rx.tap
+            .subscribe(onNext: { self.viewModel.leftSelected.value = !self.viewModel.leftSelected.value })
+            .disposed(by: disposeBag)
         
         viewModel.leftSelected
             .asObservable()
             .bind(to: button.rx.isSelected)
-            .disposed(by: disposeBag)
-        
-        button.rx.tap
-            .subscribe(onNext: { self.viewModel.leftSelected.value = !self.viewModel.leftSelected.value })
             .disposed(by: disposeBag)
         
         viewModel.leftButtonEnabled
@@ -132,19 +124,16 @@ class GameViewController: UIViewController {
         button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
         
         button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
-        
-//        button.rx.tap
-//            .bind(to: viewModel.downButtonTapped)
-//            .disposed(by: disposeBag)
+
+        button.rx.tap
+            .subscribe(onNext: {self.viewModel.downSelected.value = !self.viewModel.downSelected.value})
+            .disposed(by: disposeBag)
         
         viewModel.downSelected
             .asObservable()
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
-        
-        button.rx.tap
-            .subscribe(onNext: {self.viewModel.downSelected.value = !self.viewModel.downSelected.value})
-            .disposed(by: disposeBag)
+         
         
         viewModel.downButtonEnabled
             .bind(to: button.rx.isEnabled)
@@ -165,13 +154,13 @@ class GameViewController: UIViewController {
         
         button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
         
+        button.rx.tap
+            .subscribe(onNext: {self.viewModel.rightSelected.value = !self.viewModel.rightSelected.value})
+            .disposed(by: disposeBag)
+        
         viewModel.rightSelected
             .asObservable()
             .bind(to: button.rx.isSelected)
-            .disposed(by: disposeBag)
-        
-        button.rx.tap
-            .subscribe(onNext: {self.viewModel.rightSelected.value = !self.viewModel.rightSelected.value})
             .disposed(by: disposeBag)
         
         viewModel.rightButtonEnabled
@@ -193,10 +182,19 @@ class GameViewController: UIViewController {
         
         button.addTarget(self, action: #selector(playerAction(_:)), for: .touchUpInside)
         
+        button.rx.tap
+            .subscribe(onNext: {self.viewModel.actionSelected.value = !self.viewModel.actionSelected.value})
+            .disposed(by: disposeBag)
+        
+        viewModel.actionButtonSelected
+            .bind(to: button.rx.isSelected)
+            .disposed(by: disposeBag)
+        
         viewModel.actionButtonEnabled
             .bind(to: button.rx.isEnabled)
             .disposed(by: disposeBag)
-
+    
+        
         return button
     }()
     
@@ -217,6 +215,7 @@ class GameViewController: UIViewController {
         view.addSubview(actionButton)
         
         setupLayout()
+        setupBindings()
     }
     
     // MARK: - Layout
@@ -252,31 +251,54 @@ class GameViewController: UIViewController {
         ])
     }
     
+    func setupBindings() {
+        viewModel.currentPosition
+            .subscribe({ (value) in
+                print("current position: ", value)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.actionButtonSelected
+            .subscribe({ value in
+                if (value.element ?? true) {
+                    print("setting to false: ")
+                    self.viewModel.upSelected.value = false
+                    self.viewModel.downSelected.value = false
+                    self.viewModel.rightSelected.value = false
+                    self.viewModel.leftSelected.value = false
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.isGameFinished
+            .subscribe({ (value) in
+                if (value.element ?? false) {
+                    print("GAME OVER: ", value)
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+    
     // MARK: - Button Functions
     
     @objc func setButtonSelected(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
-//        DispatchQueue.main.async {
-//            if (sender.isSelected) {
-//                sender.layer.borderColor = UIColor.purple.cgColor
-//            } else {
-//                sender.layer.borderColor = UIColor.white.cgColor
-//            }
-//        }
     }
     
     @objc func playerAction(_ sender: UIButton) {
-        print("player action")
         sender.isSelected = !sender.isSelected
         
         if (viewModel.upSelected.value) {
-            viewModel.setCurrentPosition(direction: "up")
-        } else if (viewModel.leftSelected.value) {
-            print("left")
-        } else if (viewModel.rightSelected.value) {
-            print("right")
-        } else if (viewModel.downSelected.value) {
-            print("down")
+            viewModel.setCurrentPosition(direction: 1)
+        }
+        else if (viewModel.downSelected.value) {
+            viewModel.setCurrentPosition(direction: 2)
+        }
+        else if (viewModel.rightSelected.value) {
+            viewModel.setCurrentPosition(direction: 3)
+        }
+        else if (viewModel.leftSelected.value) {
+            viewModel.setCurrentPosition(direction: 4)
         }
     }
 }
