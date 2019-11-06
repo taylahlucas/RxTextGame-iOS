@@ -80,6 +80,9 @@ class GameViewModel {
                 if (self.getPosValue(position: [position[0]+1, position[1]]) == .path) {
                     return true
                 }
+                else if (self.getPosValue(position: [position[0]+1, position[1]]) == .finish) {
+                    return true
+                }
                 return false
             }
     }()
@@ -89,6 +92,9 @@ class GameViewModel {
             .map { position -> Bool in
                 guard (position[1]-1 >= 0) else { return false }
                 if (self.getPosValue(position: [position[0], position[1]-1]) == .path) {
+                    return true
+                }
+                else if (self.getPosValue(position: [position[0], position[1]-1]) == .finish) {
                     return true
                 }
                 return false
@@ -102,6 +108,9 @@ class GameViewModel {
                 if (self.getPosValue(position: [position[0]-1, position[1]]) == .path) {
                     return true
                 }
+                else if (self.getPosValue(position: [position[0]-1, position[1]]) == .finish) {
+                    return true
+                }
                 return false
             }
     }()
@@ -111,6 +120,9 @@ class GameViewModel {
             .map { position -> Bool in
                 guard (position[1]+1 <= self.maxCol) else { return false }
                 if (self.getPosValue(position: [position[0], position[1]+1]) == .path) {
+                    return true
+                }
+                else if (self.getPosValue(position: [position[0], position[1]+1]) == .finish) {
                     return true
                 }
                 return false
@@ -128,7 +140,9 @@ class GameViewModel {
     }()
     
     lazy var actionButtonSelected: Observable<Bool> = {
-        return actionSelected.asObservable()
+        actionSelected
+            .asObservable()
+            .map { selected in return selected }
     }()
 
     lazy var isGameFinished: Observable<Bool> = {
@@ -148,8 +162,6 @@ class GameViewModel {
     }
     
     func setCurrentPosition(direction: Int) {
-        print("direction: ", direction)
-        
         if (direction == 1) {                               // Up
             currentPosition.insert(currentPosition.value[0]+1, at: 0)
         }
@@ -162,5 +174,12 @@ class GameViewModel {
         else if (direction == 4) {                          // Left
             currentPosition.insert(currentPosition.value[1] - 1, at: 1)
         }
+    }
+    
+    func resetValues() {
+        self.upSelected.value = false
+        self.downSelected.value = false
+        self.rightSelected.value = false
+        self.leftSelected.value = false
     }
 }

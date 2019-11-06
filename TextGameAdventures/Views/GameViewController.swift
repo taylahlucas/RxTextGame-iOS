@@ -253,27 +253,19 @@ class GameViewController: UIViewController {
     
     func setupBindings() {
         viewModel.currentPosition
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
             .subscribe({ (value) in
                 print("current position: ", value)
             })
             .disposed(by: disposeBag)
 
-        viewModel.actionButtonSelected
-            .subscribe({ value in
-                if (value.element ?? true) {
-                    print("setting to false: ")
-                    self.viewModel.upSelected.value = false
-                    self.viewModel.downSelected.value = false
-                    self.viewModel.rightSelected.value = false
-                    self.viewModel.leftSelected.value = false
-                }
-            })
-            .disposed(by: disposeBag)
-        
         viewModel.isGameFinished
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
             .subscribe({ (value) in
                 if (value.element ?? false) {
-                    print("GAME OVER: ", value)
+                    self.descLabel.text = "GAME OVER"
                 }
             })
             .disposed(by: disposeBag)
@@ -282,6 +274,7 @@ class GameViewController: UIViewController {
     // MARK: - Button Functions
     
     @objc func setButtonSelected(_ sender: UIButton) {
+        viewModel.resetValues()
         sender.isSelected = !sender.isSelected
     }
     
@@ -300,5 +293,8 @@ class GameViewController: UIViewController {
         else if (viewModel.leftSelected.value) {
             viewModel.setCurrentPosition(direction: 4)
         }
+    
+        viewModel.resetValues()
     }
+
 }
