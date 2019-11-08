@@ -166,7 +166,7 @@ class GameViewController: UIViewController {
         button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
         button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .highlighted)
         
-        button.addTarget(self, action: #selector(playerAction(_:)), for: .touchUpInside)
+//        button.addTarget(self, action: #selector(playerAction(_:)), for: .touchUpInside)
         
         button.rx.tap
             .bind(to: viewModel.actionSelected)
@@ -176,11 +176,15 @@ class GameViewController: UIViewController {
             .asObservable()
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
-        
-//        viewModel.actionIsSelected
-//            .asObservable()
-//            .subscribe(onNext: { _ in self.viewModel.moveTo } )
-//            .disposed(by: disposeBag)
+    
+        // TO DO -- When action button tapped, call the moveTo function
+        viewModel.actionIsSelected
+//            .do(onNext: { selected in
+//                print("selected: ", selected)
+//            })
+//            .subscribe(onNext: { [weak self] _ in self?.viewModel.isMovingTo })
+            .subscribe(onNext: { [weak self] _ in self?.viewModel.test() })
+            .disposed(by: disposeBag)
         
         viewModel.actionButtonEnabled
             .bind(to: button.rx.isEnabled)

@@ -36,9 +36,9 @@ class GameViewModel {
     lazy var leftSelected: PublishSubject<Void> = PublishSubject<Void>()
     lazy var rightSelected: PublishSubject<Void> = PublishSubject<Void>()
     lazy var actionSelected: PublishSubject<Void> = PublishSubject<Void>()
+    lazy var moveTo: PublishSubject<Void> = PublishSubject<Void>()
     
     // MARK: - Observables
-    
     var currentPosition: BehaviorRelay<[Int]> = BehaviorRelay<[Int]>(value: [0, 0])
 
     lazy var selectedButtons: Observable<Int> = {
@@ -203,14 +203,29 @@ class GameViewModel {
         }
     }()
     
-    lazy var moveTo: Observable<Void>  = {
+    // MARK: - Testing
+    // Want this to run viewModel.setCurrentPosition(direction: selectedButton)
+    lazy var isMovingTo: Observable<Bool> = {
         selectedButtons
             .map { button in
                 print("button: ", button)
-        }
+                return true
+            }
     }()
+    
+    func test() {
+        selectedButtons
+            .map { button -> Bool in
+                if (button > 0) {
+                    print("button: ", button)
+                    return true
+                }
+                return false
+            }
+    }
 
     // MARK: - Functions
+    
     
     func getPosValue(position: [Int]) -> MapObject {
         return gameMap[position[0]][position[1]]
@@ -231,3 +246,32 @@ class GameViewModel {
         }
     }
 }
+
+
+
+
+
+
+//
+//    lazy var isMovingTo: Observable<Bool>  = {
+////        var moveRelay: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: false)
+////
+////        moveTo
+////            .subscribe({ _ in
+////                moveRelay.accept(!moveRelay.value)
+////            })
+////            .disposed(by: disposeBag)
+////
+////        if (moveRelay.value) {
+////            selectedButtons
+////                .map { button in
+////                    print("button: ", button)
+////                    self.setCurrentPosition(direction: button)
+////            }
+////        }
+////        return selectedButtons
+////            .map { button in
+////                print("button: ", button)
+////                self.setCurrentPosition(direction: button)
+////        }
+//    }()
