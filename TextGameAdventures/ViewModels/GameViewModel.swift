@@ -30,8 +30,7 @@ class GameViewModel {
     }()
     
     // MARK: - Actions
-
-    var currentPosition: BehaviorRelay<[Int]> = BehaviorRelay<[Int]>(value: [0, 0])
+    
     lazy var upSelected: PublishSubject<Void> = PublishSubject<Void>()
     lazy var downSelected: PublishSubject<Void> = PublishSubject<Void>()
     lazy var leftSelected: PublishSubject<Void> = PublishSubject<Void>()
@@ -39,6 +38,8 @@ class GameViewModel {
     lazy var actionSelected: PublishSubject<Void> = PublishSubject<Void>()
     
     // MARK: - Observables
+    
+    var currentPosition: BehaviorRelay<[Int]> = BehaviorRelay<[Int]>(value: [0, 0])
 
     lazy var selectedButtons: Observable<Int> = {
         return Observable
@@ -61,10 +62,8 @@ class GameViewModel {
         currentPosition
             .map { position -> Bool in
                 guard (position[0]+1 <= self.maxRow) else { return false }
-                if (self.getPosValue(position: [position[0]+1, position[1]]) == .path) {
-                    return true
-                }
-                else if (self.getPosValue(position: [position[0]+1, position[1]]) == .finish) {
+                let gridType = self.getPosValue(position: [position[0]+1, position[1]])
+                if gridType == .path || gridType == .finish {
                     return true
                 }
                 return false
@@ -90,10 +89,8 @@ class GameViewModel {
         currentPosition
             .map { position -> Bool in
                 guard (position[1]-1 >= 0) else { return false }
-                if (self.getPosValue(position: [position[0], position[1]-1]) == .path) {
-                    return true
-                }
-                else if (self.getPosValue(position: [position[0], position[1]-1]) == .finish) {
+                let gridType = self.getPosValue(position: [position[0], position[1]-1])
+                if gridType == .path || gridType == .finish {
                     return true
                 }
                 return false
@@ -119,10 +116,8 @@ class GameViewModel {
         currentPosition
             .map { position -> Bool in
                 guard (position[0]-1 >= 0) else { return false }
-                if (self.getPosValue(position: [position[0]-1, position[1]]) == .path) {
-                    return true
-                }
-                else if (self.getPosValue(position: [position[0]-1, position[1]]) == .finish) {
+                let gridType = self.getPosValue(position: [position[0]-1, position[1]])
+                if gridType == .path || gridType == .finish {
                     return true
                 }
                 return false
@@ -148,10 +143,8 @@ class GameViewModel {
         currentPosition
             .map { position -> Bool in
                 guard (position[1]+1 <= self.maxCol) else { return false }
-                if (self.getPosValue(position: [position[0], position[1]+1]) == .path) {
-                    return true
-                }
-                else if (self.getPosValue(position: [position[0], position[1]+1]) == .finish) {
+                let gridType = self.getPosValue(position: [position[0], position[1]+1])
+                if gridType == .path || gridType == .finish {
                     return true
                 }
                 return false
@@ -174,6 +167,9 @@ class GameViewModel {
     }()
     
     lazy var actionButtonEnabled: Observable<Bool> = {
+//        selectedButtons                   // "cannot convert value of type Observable<Int> to closure tpye Observable<Bool>
+//            .filter({ $0 > 0 })
+        
         selectedButtons
             .map { allowMove -> Bool in
                 if (allowMove > 0) {
@@ -195,6 +191,9 @@ class GameViewModel {
     }()
 
     lazy var isGameFinished: Observable<Bool> = {
+//        currentPosition               // Type [Int] has no member finish
+//            .filter({ $0 == .finish })
+    
         currentPosition
             .map{ position -> Bool in
                 if (self.getPosValue(position: position) == .finish) {

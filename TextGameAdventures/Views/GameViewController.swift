@@ -22,6 +22,8 @@ class GameViewController: UIViewController {
         label.textColor = UIColor.white
         
         UserDefaults.standard.rx.observe(String.self, "playerName")
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] (playerName) in
                 if let playerName = playerName {
                     label.text = playerName

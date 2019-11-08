@@ -28,8 +28,7 @@ class StartPageViewModel {
     lazy var buttonIsEnabled: Observable<Bool> = {
       playerName
           .map { name -> Bool in
-              if (name ?? "").isEmpty { return false }
-              return true
+            return !(name ?? "").isEmpty
           }
     }()
 }
