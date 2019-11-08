@@ -9,21 +9,6 @@
 import RxSwift
 import RxCocoa
 
-extension BehaviorRelay where Element: RangeReplaceableCollection {
-    func insert(_ element: Element.Element, at index: Element.Index) {
-        var newValue = value
-        newValue.remove(at: index)
-        newValue.insert(element, at: index)
-        accept(newValue)
-    }
-    
-    func remove(at index: Element.Index) {
-        var newValue = value
-        newValue.remove(at: index)
-        accept(newValue)
-    }
-}
-
 class GameViewModel {
     
     private let disposeBag: DisposeBag = DisposeBag()
@@ -47,22 +32,21 @@ class GameViewModel {
     // MARK: - Actions
 
     var currentPosition: BehaviorRelay<[Int]> = BehaviorRelay<[Int]>(value: [0, 0])
-    
-    lazy var upSelected = Variable(false)
-    lazy var downSelected = Variable(false)
-    lazy var leftSelected = Variable(false)
-    lazy var rightSelected = Variable(false)
-    lazy var actionSelected = Variable(false)
+    lazy var upSelected: PublishSubject<Void> = PublishSubject<Void>()
+    lazy var downSelected: PublishSubject<Void> = PublishSubject<Void>()
+    lazy var leftSelected: PublishSubject<Void> = PublishSubject<Void>()
+    lazy var rightSelected: PublishSubject<Void> = PublishSubject<Void>()
+    lazy var actionSelected: PublishSubject<Void> = PublishSubject<Void>()
     
     // MARK: - Observables
 
     lazy var selectedButtons: Observable<Int> = {
         return Observable
         .combineLatest(
-            self.upSelected.asObservable().map { value in return value }.startWith(false),
-            self.downSelected.asObservable().map { value in return value }.startWith(false),
-            self.leftSelected.asObservable().map { value in return value }.startWith(false),
-            self.rightSelected.asObservable().map { value in return value }.startWith(false)
+            upIsSelected.startWith(false),
+            downIsSelected.startWith(false),
+            leftIsSelected.startWith(false),
+            rightIsSelected.startWith(false)
         ) { ($0, $1, $2, $3) }
             .map { up, down, left, right in
                 if (up) { return 1 }
@@ -87,6 +71,21 @@ class GameViewModel {
             }
     }()
     
+    lazy var upIsSelected: Observable<Bool> = {
+        var upRelay: BehaviorRelay<Bool> = BehaviorRelay(value: false)
+        actionSelected
+            .subscribe(onNext: { upRelay.accept(false) })
+            .disposed(by: disposeBag)
+    
+        upSelected
+            .subscribe({ _ in
+                upRelay.accept(!upRelay.value)
+            })
+            .disposed(by: disposeBag)
+        
+        return upRelay.asObservable()
+    }()
+    
     lazy var leftButtonEnabled: Observable<Bool> = {
         currentPosition
             .map { position -> Bool in
@@ -99,6 +98,21 @@ class GameViewModel {
                 }
                 return false
             }
+    }()
+    
+    lazy var leftIsSelected: Observable<Bool> = {
+        var leftRelay: BehaviorRelay<Bool> = BehaviorRelay(value: false)
+        actionSelected
+            .subscribe(onNext: { leftRelay.accept(false) })
+            .disposed(by: disposeBag)
+    
+        upSelected
+            .subscribe({ _ in
+                leftRelay.accept(!leftRelay.value)
+            })
+            .disposed(by: disposeBag)
+        
+        return leftRelay.asObservable()
     }()
     
     lazy var downButtonEnabled: Observable<Bool> = {
@@ -114,6 +128,21 @@ class GameViewModel {
                 return false
             }
     }()
+    
+    lazy var downIsSelected: Observable<Bool> = {
+        var downRelay: BehaviorRelay<Bool> = BehaviorRelay(value: false)
+        actionSelected
+            .subscribe(onNext: { downRelay.accept(false) })
+            .disposed(by: disposeBag)
+    
+        upSelected
+            .subscribe({ _ in
+                downRelay.accept(!downRelay.value)
+            })
+            .disposed(by: disposeBag)
+        
+        return downRelay.asObservable()
+    }()
 
     lazy var rightButtonEnabled: Observable<Bool> = {
         currentPosition
@@ -128,7 +157,22 @@ class GameViewModel {
                 return false
             }
     }()
-
+    
+    lazy var rightIsSelected: Observable<Bool> = {
+        var rightRelay: BehaviorRelay<Bool> = BehaviorRelay(value: false)
+        actionSelected
+            .subscribe(onNext: { rightRelay.accept(false) })
+            .disposed(by: disposeBag)
+    
+        upSelected
+            .subscribe({ _ in
+                rightRelay.accept(!rightRelay.value)
+            })
+            .disposed(by: disposeBag)
+        
+        return rightRelay.asObservable()
+    }()
+    
     lazy var actionButtonEnabled: Observable<Bool> = {
         selectedButtons
             .map { allowMove -> Bool in
@@ -139,10 +183,15 @@ class GameViewModel {
         }
     }()
     
-    lazy var actionButtonSelected: Observable<Bool> = {
+    lazy var actionIsSelected: Observable<Bool> = {
+        var actionRelay: BehaviorRelay<Bool> = BehaviorRelay(value: false)
         actionSelected
-            .asObservable()
-            .map { selected in return selected }
+            .subscribe({ _ in
+                actionRelay.accept(!actionRelay.value)
+            })
+            .disposed(by: disposeBag)
+        
+        return actionRelay.asObservable()
     }()
 
     lazy var isGameFinished: Observable<Bool> = {
@@ -155,6 +204,13 @@ class GameViewModel {
         }
     }()
     
+    lazy var moveTo: Observable<Void>  = {
+        selectedButtons
+            .map { button in
+                print("button: ", button)
+        }
+    }()
+
     // MARK: - Functions
     
     func getPosValue(position: [Int]) -> MapObject {
@@ -174,12 +230,5 @@ class GameViewModel {
         else if (direction == 4) {                          // Left
             currentPosition.insert(currentPosition.value[1] - 1, at: 1)
         }
-    }
-    
-    func resetValues() {
-        self.upSelected.value = false
-        self.downSelected.value = false
-        self.rightSelected.value = false
-        self.leftSelected.value = false
     }
 }

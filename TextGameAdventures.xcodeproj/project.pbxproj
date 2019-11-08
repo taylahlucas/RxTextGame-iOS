@@ -21,6 +21,9 @@
 		6F0EC3A703BA766BBB045A34 /* Pods_TextGameAdventuresTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B75442E7337FA42E7950EBC /* Pods_TextGameAdventuresTests.framework */; };
 		D0093A2B236B9A0300390515 /* StartPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0093A2A236B9A0300390515 /* StartPageViewModel.swift */; };
 		D009798B23693535000A5C34 /* StartPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D009798A23693535000A5C34 /* StartPageViewController.swift */; };
+		D0954AA42375180100DCE1B0 /* BehaviorRelay++Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0954AA32375180100DCE1B0 /* BehaviorRelay++Extension.swift */; };
+		D0954AA62375184C00DCE1B0 /* UIColor++Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0954AA52375184C00DCE1B0 /* UIColor++Extension.swift */; };
+		D0954AA82375187600DCE1B0 /* UIButton++Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0954AA72375187600DCE1B0 /* UIButton++Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +59,9 @@
 		94FEB10C3BB84CC941B8008C /* Pods-TextGameAdventuresTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TextGameAdventuresTests.debug.xcconfig"; path = "Target Support Files/Pods-TextGameAdventuresTests/Pods-TextGameAdventuresTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D0093A2A236B9A0300390515 /* StartPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPageViewModel.swift; sourceTree = "<group>"; };
 		D009798A23693535000A5C34 /* StartPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPageViewController.swift; sourceTree = "<group>"; };
+		D0954AA32375180100DCE1B0 /* BehaviorRelay++Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BehaviorRelay++Extension.swift"; sourceTree = "<group>"; };
+		D0954AA52375184C00DCE1B0 /* UIColor++Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor++Extension.swift"; sourceTree = "<group>"; };
+		D0954AA72375187600DCE1B0 /* UIButton++Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton++Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +108,7 @@
 		60EAF9AF23690CE200058281 /* TextGameAdventures */ = {
 			isa = PBXGroup;
 			children = (
+				D0954AA2237517E300DCE1B0 /* Extensions */,
 				D0097989236934DD000A5C34 /* Models */,
 				D0097988236934D1000A5C34 /* ViewModels */,
 				D0097987236934C6000A5C34 /* Views */,
@@ -159,6 +166,16 @@
 				60EAF9D62369129000058281 /* MapObject.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		D0954AA2237517E300DCE1B0 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D0954AA32375180100DCE1B0 /* BehaviorRelay++Extension.swift */,
+				D0954AA52375184C00DCE1B0 /* UIColor++Extension.swift */,
+				D0954AA72375187600DCE1B0 /* UIButton++Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		FC393F5E9A4C6293A75B56D3 /* Frameworks */ = {
@@ -340,8 +357,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0093A2B236B9A0300390515 /* StartPageViewModel.swift in Sources */,
+				D0954AA42375180100DCE1B0 /* BehaviorRelay++Extension.swift in Sources */,
 				60EAF9D323690D6B00058281 /* GameViewController.swift in Sources */,
+				D0954AA82375187600DCE1B0 /* UIButton++Extension.swift in Sources */,
 				60EAF9D72369129000058281 /* MapObject.swift in Sources */,
+				D0954AA62375184C00DCE1B0 /* UIColor++Extension.swift in Sources */,
 				60EAF9B123690CE200058281 /* AppDelegate.swift in Sources */,
 				60EAF9D523690D7700058281 /* GameViewModel.swift in Sources */,
 				D009798B23693535000A5C34 /* StartPageViewController.swift in Sources */,
