@@ -68,6 +68,8 @@ class GameViewController: UIViewController {
         
         viewModel.upIsSelected
             .asObservable()
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
             .subscribe(onNext: { value in
                 if (value) {
                     UIColorScheme.instance.setSelectedButtonScheme(for: button)
@@ -82,6 +84,8 @@ class GameViewController: UIViewController {
             .disposed(by: disposeBag)
         
         viewModel.upButtonEnabled
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
             .subscribe(onNext: { value in
                 if (!value) {
                     UIColorScheme.instance.setDisabledButtonScheme(for: button)
@@ -106,11 +110,26 @@ class GameViewController: UIViewController {
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
         
+        viewModel.leftIsSelected
+            .asObservable()
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { value in
+                if (value) {
+                    UIColorScheme.instance.setSelectedButtonScheme(for: button)
+                } else {
+                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
+                }
+            })
+            .disposed(by: disposeBag)
+        
         viewModel.leftButtonEnabled
             .bind(to: button.rx.isEnabled)
             .disposed(by: disposeBag)
         
         viewModel.leftButtonEnabled
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
             .subscribe(onNext: { value in
                 if (!value) {
                     UIColorScheme.instance.setDisabledButtonScheme(for: button)
@@ -134,10 +153,32 @@ class GameViewController: UIViewController {
             .asObservable()
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
-         
+        
+        viewModel.downIsSelected
+            .asObservable()
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { value in
+                if (value) {
+                    UIColorScheme.instance.setSelectedButtonScheme(for: button)
+                } else {
+                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
+                }
+            })
+            .disposed(by: disposeBag)
         
         viewModel.downButtonEnabled
             .bind(to: button.rx.isEnabled)
+            .disposed(by: disposeBag)
+        
+        viewModel.downButtonEnabled
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { value in
+                if (!value) {
+                    UIColorScheme.instance.setDisabledButtonScheme(for: button)
+                }
+            })
             .disposed(by: disposeBag)
   
         return button
@@ -157,8 +198,31 @@ class GameViewController: UIViewController {
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
         
+        viewModel.rightIsSelected
+            .asObservable()
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { value in
+                if (value) {
+                    UIColorScheme.instance.setSelectedButtonScheme(for: button)
+                } else {
+                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
+                }
+            })
+            .disposed(by: disposeBag)
+        
         viewModel.rightButtonEnabled
             .bind(to: button.rx.isEnabled)
+            .disposed(by: disposeBag)
+        
+        viewModel.rightButtonEnabled
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { value in
+                if (!value) {
+                    UIColorScheme.instance.setDisabledButtonScheme(for: button)
+                }
+            })
             .disposed(by: disposeBag)
 
         return button
@@ -175,11 +239,35 @@ class GameViewController: UIViewController {
         
         viewModel.actionIsSelected
             .asObservable()
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { value in
+                if (value) {
+                    UIColorScheme.instance.setSelectedButtonScheme(for: button)
+                } else {
+                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        
+        viewModel.actionIsSelected
+            .asObservable()
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
 
         viewModel.actionButtonEnabled
             .bind(to: button.rx.isEnabled)
+            .disposed(by: disposeBag)
+        
+        viewModel.actionButtonEnabled
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { value in
+                if (!value) {
+                    UIColorScheme.instance.setDisabledButtonScheme(for: button)
+                }
+            })
             .disposed(by: disposeBag)
 
         return button
@@ -239,7 +327,14 @@ class GameViewController: UIViewController {
     }
     
     func setupBindings() {
-
+        viewModel.currentPosition
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+            .subscribe({ value in
+                self.descLabel.text = value.element?.description
+            })
+            .disposed(by: disposeBag)
+            
         viewModel.isInTrap
             .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
             .observeOn(MainScheduler.instance)

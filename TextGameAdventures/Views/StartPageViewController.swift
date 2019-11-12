@@ -71,8 +71,10 @@ class StartPageViewController: UIViewController {
         viewModel.buttonIsEnabled
         .subscribe(onNext: { [weak self] enabled in
             if (enabled) {
+                print("enabled")
                 UIColorScheme.instance.setUnselectedButtonScheme(for: button)
             } else {
+                print("not enabled")
                 UIColorScheme.instance.setDisabledButtonScheme(for: button)
             }
         })
@@ -114,6 +116,7 @@ class StartPageViewController: UIViewController {
         ])
     }
 
+    // Move this into button to get rid of target
     @objc func startGame(_ sender: UIButton) {
         UIColorScheme.instance.setSelectedButtonScheme(for: startButton)
         self.present(GameViewController(), animated: true, completion: nil)
