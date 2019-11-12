@@ -10,17 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-extension UIColor {
-   func toImage() -> UIImage {
-       let bounds: CGRect = CGRect(x: 0, y: 0, width: 1, height: 1)
-       let renderer: UIGraphicsImageRenderer = UIGraphicsImageRenderer(bounds: bounds)
-       return renderer.image { rendererContext in
-           rendererContext.cgContext.setFillColor(self.cgColor)
-           rendererContext.cgContext.fill(bounds)
-       }
-   }
-}
-
 class StartPageViewController: UIViewController {
     private let viewModel: StartPageViewModel = StartPageViewModel()
     private let disposeBag: DisposeBag = DisposeBag()
@@ -85,12 +74,6 @@ class StartPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupLayout()
-    }
-    
-    // MARK: - Functions
-    
-    func setupLayout() {
         view.backgroundColor = UIColor.darkGray
         
         view.addSubview(mainStack)
@@ -98,7 +81,13 @@ class StartPageViewController: UIViewController {
         mainStack.addArrangedSubview(nameLabel)
         mainStack.addArrangedSubview(nameField)
         mainStack.addArrangedSubview(startButton)
-
+        
+        setupLayout()
+    }
+    
+    // MARK: - Functions
+    
+    func setupLayout() {
         NSLayoutConstraint.activate([
             mainStack.topAnchor.constraint(equalTo: view.topAnchor, constant: 200),
             mainStack.leftAnchor.constraint(equalTo: view.leftAnchor),

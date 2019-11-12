@@ -9,21 +9,6 @@
 import RxSwift
 import RxCocoa
 
-extension BehaviorRelay where Element: RangeReplaceableCollection {
-    func insert(_ element: Element.Element, at index: Element.Index) {
-        var newValue = value
-        newValue.remove(at: index)
-        newValue.insert(element, at: index)
-        accept(newValue)
-    }
-    
-    func remove(at index: Element.Index) {
-        var newValue = value
-        newValue.remove(at: index)
-        accept(newValue)
-    }
-}
-
 class GameViewModel {
     
     private let disposeBag: DisposeBag = DisposeBag()
@@ -51,7 +36,15 @@ class GameViewModel {
     }()
     
     // MARK: - Actions
+    
+    lazy var upSelected: PublishSubject<Void> = PublishSubject<Void>()
+    lazy var downSelected: PublishSubject<Void> = PublishSubject<Void>()
+    lazy var leftSelected: PublishSubject<Void> = PublishSubject<Void>()
+    lazy var rightSelected: PublishSubject<Void> = PublishSubject<Void>()
+    lazy var actionSelected: PublishSubject<Void> = PublishSubject<Void>()
 
+    // MARK: - Observables
+    var selectedButton: BehaviorRelay<Int> = BehaviorRelay<Int>(value: 0)
     var currentPosition: BehaviorRelay<[Int]> = BehaviorRelay<[Int]>(value: [0, 0])
     var currentStatus: HealthObject = .healthy
     
@@ -65,53 +58,113 @@ class GameViewModel {
         return count
     }()
     
-    lazy var upSelected = Variable(false)
-    lazy var downSelected = Variable(false)
-    lazy var leftSelected = Variable(false)
-    lazy var rightSelected = Variable(false)
-    lazy var actionSelected = Variable(false)
+    var upRelay: BehaviorRelay<Bool> = BehaviorRelay(value: false)
+    var leftRelay: BehaviorRelay<Bool> = BehaviorRelay(value: false)
+    var downRelay: BehaviorRelay<Bool> = BehaviorRelay(value: false)
+    var rightRelay: BehaviorRelay<Bool> = BehaviorRelay(value: false)
     
-    // MARK: - Observables
-
+    // Returns value of 1-4 indicating which direction the player has selected
     lazy var selectedButtons: Observable<Int> = {
         return Observable
-        .combineLatest(
-            self.upSelected.asObservable().map { value in return value }.startWith(false),
-            self.downSelected.asObservable().map { value in return value }.startWith(false),
-            self.leftSelected.asObservable().map { value in return value }.startWith(false),
-            self.rightSelected.asObservable().map { value in return value }.startWith(false)
-        ) { ($0, $1, $2, $3) }
+            .combineLatest(
+                upIsSelected.startWith(false),
+                downIsSelected.startWith(false),
+                leftIsSelected.startWith(false),
+                rightIsSelected.startWith(false)
+            ) { ($0, $1, $2, $3) }
             .map { up, down, left, right in
                 if (up) { return 1 }
                 if (down) { return 2 }
                 if (left) { return 3 }
                 if (right) { return 4 }
                 return 0
-        }
+            }
+            .do(onNext: { [weak self] value in
+                self?.selectedButton.accept(value)
+            })
     }()
+    
+    lazy var setCurrentPosition: Observable<Void> = {
+        actionSelected
+            .withLatestFrom(selectedButton)
+            .withLatestFrom(currentPosition) { ($0, $1) }
+            .map { [weak self] button, curPos -> Void in
+
+                    switch button {
+                    case 1: self?.currentPosition.insert(curPos[0]+1, at: 0)            // up
+                    case 2: self?.currentPosition.insert(curPos[0]-1, at: 0)            // down
+                    case 3: self?.currentPosition.insert(curPos[1]-1, at: 1)            // left
+                    case 4: self?.currentPosition.insert(curPos[1]+1, at: 1)            // right
+                    default:
+                            self?.currentPosition.insert(curPos[0], at: 0)
+                    }
+                }
+        }()
     
     lazy var upButtonEnabled: Observable<Bool> = {
         currentPosition
             .map { position -> Bool in
                 guard (position[0]+1 <= self.maxRow) else { return false }
-                let position = self.getPosValue(position: [position[0]+1, position[1]])
-                if (position != .none) {
+                let gridType = self.getPosValue(position: [position[0]+1, position[1]])
+                if gridType == .path || gridType == .finish {
                     return true
                 }
                 return false
             }
+    }()
+    
+    lazy var upIsSelected: Observable<Bool> = {
+        upSelected
+            .subscribe({ _ in
+                self.upRelay.accept(!self.upRelay.value)
+            })
+            .disposed(by: disposeBag)
+        
+        return upRelay.asObservable()
+    }()
+    
+    lazy var leftButtonEnabled: Observable<Bool> = {
+        currentPosition
+            .map { position -> Bool in
+                guard (position[1]-1 >= 0) else { return false }
+                let gridType = self.getPosValue(position: [position[0], position[1]-1])
+                if gridType == .path || gridType == .finish {
+                    return true
+                }
+                return false
+            }
+    }()
+    
+    lazy var leftIsSelected: Observable<Bool> = {
+        leftSelected
+            .subscribe({ _ in
+                self.leftRelay.accept(!self.leftRelay.value)
+            })
+            .disposed(by: disposeBag)
+        
+        return leftRelay.asObservable()
     }()
     
     lazy var downButtonEnabled: Observable<Bool> = {
         currentPosition
             .map { position -> Bool in
                 guard (position[0]-1 >= 0) else { return false }
-                let position = self.getPosValue(position: [position[0]-1, position[1]])
-                if (position != .none) {
+                let gridType = self.getPosValue(position: [position[0]-1, position[1]])
+                if gridType == .path || gridType == .finish {
                     return true
                 }
                 return false
             }
+    }()
+    
+    lazy var downIsSelected: Observable<Bool> = {
+        downSelected
+            .subscribe({ _ in
+                self.downRelay.accept(!self.downRelay.value)
+            })
+            .disposed(by: disposeBag)
+        
+        return downRelay.asObservable()
     }()
 
     lazy var rightButtonEnabled: Observable<Bool> = {
@@ -130,14 +183,24 @@ class GameViewModel {
         currentPosition
             .map { position -> Bool in
                 guard (position[1]-1 >= 0) else { return false }
-                let position = self.getPosValue(position: [position[0], position[1]-1])
-                if (position != .none) {
+                let gridType = self.getPosValue(position: [position[0], position[1]+1])
+                if gridType == .path || gridType == .finish {
                     return true
                 }
                 return false
             }
     }()
-
+    
+    lazy var rightIsSelected: Observable<Bool> = {
+        rightSelected
+            .subscribe({ _ in
+                self.rightRelay.accept(!self.rightRelay.value)
+            })
+            .disposed(by: disposeBag)
+        
+        return rightRelay.asObservable()
+    }()
+    
     lazy var actionButtonEnabled: Observable<Bool> = {
         selectedButtons
             .map { allowMove -> Bool in
@@ -148,10 +211,15 @@ class GameViewModel {
         }
     }()
     
-    lazy var actionButtonSelected: Observable<Bool> = {
+    lazy var actionIsSelected: Observable<Bool> = {
+        var actionRelay: BehaviorRelay<Bool> = BehaviorRelay(value: false)
         actionSelected
-            .asObservable()
-            .map { selected in return selected }
+            .subscribe({ _ in
+                actionRelay.accept(!actionRelay.value)
+            })
+            .disposed(by: disposeBag)
+
+        return actionRelay.asObservable()
     }()
     
     
@@ -185,8 +253,12 @@ class GameViewModel {
                 if (self.getPosValue(position: position) == .finish) {
                     return true
                 }
+                self.upRelay.accept(false)
+                self.leftRelay.accept(false)
+                self.downRelay.accept(false)
+                self.rightRelay.accept(false)
                 return false
-        }
+            }
     }()
 
     // MARK: - Functions
@@ -194,25 +266,7 @@ class GameViewModel {
     func getPosValue(position: [Int]) -> MapObject {
         return gameMap[position[0]][position[1]]
     }
-    
-    func setCurrentPosition(direction: Int) {
-        if (direction == 1) {                               // Up
-            currentPosition.insert(currentPosition.value[0]+1, at: 0)
-        }
-        else if (direction == 2) {                          // Down
-            currentPosition.insert(currentPosition.value[0]-1, at: 0)
-        }
-        else if (direction == 3) {                          // Right
-            currentPosition.insert(currentPosition.value[1]+1, at: 1)
-        }
-        else if (direction == 4) {                          // Left
-            currentPosition.insert(currentPosition.value[1] - 1, at: 1)
-        }
-        else {                                      // Reset to initial pos
-            currentPosition.insert(0, at: 0)
-            currentPosition.insert(0, at: 1)
-        }
-    }
+
     
     func setCurrentStatus(status: HealthObject) {
         self.currentStatus = status
@@ -222,17 +276,11 @@ class GameViewModel {
         self.chestsCollected += 1
         self.gameMap[currentPosition.value[0]][currentPosition.value[1]] = .path
     }
-    
-    func resetValues() {
-        self.upSelected.value = false
-        self.downSelected.value = false
-        self.rightSelected.value = false
-        self.leftSelected.value = false
-    }
-    
+
     func resetGame(endString: String) {
         gameMap = gameMapInitial
         setCurrentPosition(direction: 0)
+        
         setCurrentStatus(status: .healthy)
         
         UserDefaults.standard.set(endString, forKey: "endMessage")

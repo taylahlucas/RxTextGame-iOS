@@ -10,14 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-extension UIButton {
-    func setTitleAndBackgroundColor(_ titleColor: UIColor, backgroundColor: UIColor, for state: UIControlState) {
-        self.setTitleColor(titleColor, for: state)
-        self.setBackgroundImage(backgroundColor.toImage(), for: state)
-        self.layer.borderColor = UIColor.white.cgColor
-    }
-}
-
 class GameViewController: UIViewController {
     private let viewModel: GameViewModel = GameViewModel()
     private let disposeBag: DisposeBag = DisposeBag()
@@ -31,6 +23,8 @@ class GameViewController: UIViewController {
         label.textColor = UIColor.white
         
         UserDefaults.standard.rx.observe(String.self, "playerName")
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [weak self] (playerName) in
                 if let playerName = playerName {
                     label.text = playerName
@@ -64,17 +58,15 @@ class GameViewController: UIViewController {
         button.setTitle("U", for: .normal)
         button.layer.borderWidth = 2
         
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
-        
-        button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
         
         button.rx.tap
-            .subscribe(onNext: { self.viewModel.upSelected.value = !self.viewModel.upSelected.value })
+            .bind(to: viewModel.upSelected)
             .disposed(by: disposeBag)
         
-        viewModel.upSelected
+        viewModel.upIsSelected
             .asObservable()
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
@@ -92,17 +84,15 @@ class GameViewController: UIViewController {
         button.setTitle("L", for: .normal)
         button.layer.borderWidth = 2
 
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
         
-        button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
-    
         button.rx.tap
-            .subscribe(onNext: { self.viewModel.leftSelected.value = !self.viewModel.leftSelected.value })
+            .bind(to: viewModel.leftSelected)
             .disposed(by: disposeBag)
         
-        viewModel.leftSelected
+        viewModel.leftIsSelected
             .asObservable()
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
@@ -120,17 +110,15 @@ class GameViewController: UIViewController {
         button.setTitle("D", for: .normal)
         button.layer.borderWidth = 2
         
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
-        
-        button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
 
         button.rx.tap
-            .subscribe(onNext: {self.viewModel.downSelected.value = !self.viewModel.downSelected.value})
+            .bind(to: viewModel.downSelected)
             .disposed(by: disposeBag)
         
-        viewModel.downSelected
+        viewModel.downIsSelected
             .asObservable()
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
@@ -149,17 +137,15 @@ class GameViewController: UIViewController {
         button.setTitle("R", for: .normal)
         button.layer.borderWidth = 2
         
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
-        
-        button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
         
         button.rx.tap
-            .subscribe(onNext: {self.viewModel.rightSelected.value = !self.viewModel.rightSelected.value})
+            .bind(to: viewModel.rightSelected)
             .disposed(by: disposeBag)
         
-        viewModel.rightSelected
+        viewModel.rightIsSelected
             .asObservable()
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
@@ -177,25 +163,23 @@ class GameViewController: UIViewController {
         button.setTitle("ACTION", for: .normal)
         button.layer.borderWidth = 2
         
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
-        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .highlighted)
-        
-        button.addTarget(self, action: #selector(playerAction(_:)), for: .touchUpInside)
-        
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .highlighted)
+
         button.rx.tap
-            .subscribe(onNext: {self.viewModel.actionSelected.value = !self.viewModel.actionSelected.value})
+            .bind(to: viewModel.actionSelected)
             .disposed(by: disposeBag)
         
-        viewModel.actionButtonSelected
+        viewModel.actionIsSelected
+            .asObservable()
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
-        
+
         viewModel.actionButtonEnabled
             .bind(to: button.rx.isEnabled)
             .disposed(by: disposeBag)
-    
-        
+
         return button
     }()
     
@@ -253,13 +237,7 @@ class GameViewController: UIViewController {
     }
     
     func setupBindings() {
-        
-        viewModel.actionButtonSelected
-            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
-            .observeOn(MainScheduler.instance)
-            .subscribe({ [weak self] _ in self?.viewModel.resetValues() })
-            .disposed(by: disposeBag)
-        
+
         viewModel.isInTrap
             .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
             .observeOn(MainScheduler.instance)
@@ -310,30 +288,11 @@ class GameViewController: UIViewController {
                 }
             })
             .disposed(by: disposeBag)
-    }
-    
-    // MARK: - Button Functions
-    
-    @objc func setButtonSelected(_ sender: UIButton) {
-        viewModel.resetValues()
-        sender.isSelected = !sender.isSelected
-    }
-    
-    @objc func playerAction(_ sender: UIButton) {
-        sender.isSelected = !sender.isSelected
-        
-        if (viewModel.upSelected.value) {
-            viewModel.setCurrentPosition(direction: 1)
-        }
-        else if (viewModel.downSelected.value) {
-            viewModel.setCurrentPosition(direction: 2)
-        }
-        else if (viewModel.rightSelected.value) {
-            viewModel.setCurrentPosition(direction: 3)
-        }
-        else if (viewModel.leftSelected.value) {
-            viewModel.setCurrentPosition(direction: 4)
-        }
-    }
 
+        viewModel.setCurrentPosition
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+            .subscribe()
+            .disposed(by: disposeBag)
+    }
 }
