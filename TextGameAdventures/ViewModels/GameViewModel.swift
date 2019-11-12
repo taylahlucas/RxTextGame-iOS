@@ -91,12 +91,12 @@ class GameViewModel {
             .map { [weak self] button, curPos -> Void in
 
                     switch button {
-                    case 1: self?.currentPosition.insert(curPos[0]+1, at: 0)            // up
-                    case 2: self?.currentPosition.insert(curPos[0]-1, at: 0)            // down
-                    case 3: self?.currentPosition.insert(curPos[1]-1, at: 1)            // left
-                    case 4: self?.currentPosition.insert(curPos[1]+1, at: 1)            // right
+                    case 1: self?.currentPosition.replaceElementAtIndex(curPos[0]+1, at: 0)            // up
+                    case 2: self?.currentPosition.replaceElementAtIndex(curPos[0]-1, at: 0)            // down
+                    case 3: self?.currentPosition.replaceElementAtIndex(curPos[1]-1, at: 1)            // left
+                    case 4: self?.currentPosition.replaceElementAtIndex(curPos[1]+1, at: 1)            // right
                     default:
-                            self?.currentPosition.insert(curPos[0], at: 0)
+                            self?.currentPosition.replaceElementAtIndex(curPos[0], at: 0)
                     }
                 }
         }()
@@ -115,6 +115,7 @@ class GameViewModel {
     
     lazy var upIsSelected: Observable<Bool> = {
         upSelected
+            .do(onNext: { _ in print("up selected")})
             .subscribe({ _ in
                 self.upRelay.accept(!self.upRelay.value)
             })
@@ -173,18 +174,6 @@ class GameViewModel {
                 guard (position[1]+1 <= self.maxCol) else { return false }
                 let position = self.getPosValue(position: [position[0], position[1]+1])
                 if (position != .none) {
-                    return true
-                }
-                return false
-            }
-    }()
-    
-    lazy var leftButtonEnabled: Observable<Bool> = {
-        currentPosition
-            .map { position -> Bool in
-                guard (position[1]-1 >= 0) else { return false }
-                let gridType = self.getPosValue(position: [position[0], position[1]+1])
-                if gridType == .path || gridType == .finish {
                     return true
                 }
                 return false
@@ -266,7 +255,6 @@ class GameViewModel {
     func getPosValue(position: [Int]) -> MapObject {
         return gameMap[position[0]][position[1]]
     }
-
     
     func setCurrentStatus(status: HealthObject) {
         self.currentStatus = status
@@ -279,8 +267,11 @@ class GameViewModel {
 
     func resetGame(endString: String) {
         gameMap = gameMapInitial
-        setCurrentPosition(direction: 0)
         
+        self.currentPosition.replaceElementAtIndex(0, at: 0)
+        self.currentPosition.replaceElementAtIndex(0, at: 1)
+        print("self.currentPos: ", self.currentPosition.value)
+
         setCurrentStatus(status: .healthy)
         
         UserDefaults.standard.set(endString, forKey: "endMessage")

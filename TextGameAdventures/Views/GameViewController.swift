@@ -39,7 +39,7 @@ class GameViewController: UIViewController {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Healthy"
-        label.textColor = UIColor.white
+        label.textColor = Color.whiteText.value
         
         return label
     }()
@@ -47,20 +47,15 @@ class GameViewController: UIViewController {
     lazy var descLabel: UILabel = {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.white
+        label.textColor = Color.whiteText.value
         
         return label
     }()
     
     lazy var upButton: UIButton = {
         let button: UIButton = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("U", for: .normal)
-        button.layer.borderWidth = 2
-        
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
+        UIScheme.instance.setButtonScheme(for: button)
         
         button.rx.tap
             .bind(to: viewModel.upSelected)
@@ -71,8 +66,27 @@ class GameViewController: UIViewController {
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
         
+        viewModel.upIsSelected
+            .asObservable()
+            .subscribe(onNext: { value in
+                if (value) {
+                    UIColorScheme.instance.setSelectedButtonScheme(for: button)
+                } else {
+                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
+                }
+            })
+            .disposed(by: disposeBag)
+        
         viewModel.upButtonEnabled
             .bind(to: button.rx.isEnabled)
+            .disposed(by: disposeBag)
+        
+        viewModel.upButtonEnabled
+            .subscribe(onNext: { value in
+                if (!value) {
+                    UIColorScheme.instance.setDisabledButtonScheme(for: button)
+                }
+            })
             .disposed(by: disposeBag)
         
         return button
@@ -80,14 +94,9 @@ class GameViewController: UIViewController {
     
     lazy var leftButton: UIButton = {
         let button: UIButton = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("L", for: .normal)
-        button.layer.borderWidth = 2
+        UIScheme.instance.setButtonScheme(for: button)
 
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
-        
         button.rx.tap
             .bind(to: viewModel.leftSelected)
             .disposed(by: disposeBag)
@@ -100,19 +109,22 @@ class GameViewController: UIViewController {
         viewModel.leftButtonEnabled
             .bind(to: button.rx.isEnabled)
             .disposed(by: disposeBag)
+        
+        viewModel.leftButtonEnabled
+            .subscribe(onNext: { value in
+                if (!value) {
+                    UIColorScheme.instance.setDisabledButtonScheme(for: button)
+                }
+            })
+            .disposed(by: disposeBag)
 
         return button
     }()
     
     lazy var downButton: UIButton = {
         let button: UIButton = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("D", for: .normal)
-        button.layer.borderWidth = 2
-        
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
+        UIScheme.instance.setButtonScheme(for: button)
 
         button.rx.tap
             .bind(to: viewModel.downSelected)
@@ -133,14 +145,9 @@ class GameViewController: UIViewController {
     
     lazy var rightButton: UIButton = {
         let button: UIButton = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("R", for: .normal)
-        button.layer.borderWidth = 2
-        
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
-        
+        UIScheme.instance.setButtonScheme(for: button)
+
         button.rx.tap
             .bind(to: viewModel.rightSelected)
             .disposed(by: disposeBag)
@@ -159,13 +166,8 @@ class GameViewController: UIViewController {
     
     lazy var actionButton: UIButton = {
         let button: UIButton = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("ACTION", for: .normal)
-        button.layer.borderWidth = 2
-        
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
-//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .highlighted)
+        UIScheme.instance.setButtonScheme(for: button)
 
         button.rx.tap
             .bind(to: viewModel.actionSelected)
@@ -188,7 +190,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+        UIScheme.instance.setViewScheme(for: self)
         
         view.addSubview(nameLabel)
         view.addSubview(statusLabel)

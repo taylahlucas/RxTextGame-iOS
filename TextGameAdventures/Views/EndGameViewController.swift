@@ -29,7 +29,9 @@ class EndGameViewController: UIViewController {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = viewModel.resultString
-        label.textColor = UIColor.white
+        label.textColor = Color.whiteText.value
+        label.font = Font.heading.value
+        label.numberOfLines = 2
         
         return label
     }()
@@ -38,7 +40,9 @@ class EndGameViewController: UIViewController {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Chests Collected: " + viewModel.chestsCollectedString
-        label.textColor = UIColor.white
+        label.textColor = Color.whiteText.value
+        label.font = Font.description.value
+        label.textAlignment = .right
         
         return label
     }()
@@ -47,7 +51,9 @@ class EndGameViewController: UIViewController {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Total Chests: " + viewModel.totalChestsString
-        label.textColor = UIColor.white
+        label.textColor = Color.whiteText.value
+        label.font = Font.description.value
+        label.textAlignment = .right
         
         return label
     }()
@@ -59,10 +65,8 @@ class EndGameViewController: UIViewController {
         button.layer.masksToBounds = true
         
         button.setTitle("Play Again?", for: .normal)
-        button.titleLabel?.textColor = UIColor.white
-        button.setBackgroundImage(UIColor.toImage(UIColor.lightGray)(), for: .disabled)
-        button.setBackgroundImage(UIColor.toImage(UIColor.purple)(), for: .normal)
-        
+        button.titleLabel?.textColor = Color.whiteText.value
+        UIScheme.instance.setButtonScheme(for: button)
         button.addTarget(self, action: #selector(playAgain), for: .touchUpInside)
         
         return button
@@ -71,7 +75,7 @@ class EndGameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+        UIScheme.instance.setViewScheme(for: self)
         
         view.addSubview(mainStack)
         mainStack.addArrangedSubview(resultLabel)
@@ -97,6 +101,7 @@ class EndGameViewController: UIViewController {
     
     // MARK: - Button Functions
     @objc func playAgain() {
+        UIColorScheme.instance.setHighlightedButtonScheme(for: playAgainButton)
         self.dismiss(animated: true, completion: nil)
     }
 }

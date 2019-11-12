@@ -10,14 +10,14 @@ import RxSwift
 import RxCocoa
 
 extension BehaviorRelay where Element: RangeReplaceableCollection {
-    func insert(_ element: Element.Element, at index: Element.Index) {
+    func replaceElementAtIndex(_ element: Element.Element, at index: Element.Index) {
         var newValue = value
         newValue.remove(at: index)
         newValue.insert(element, at: index)
         accept(newValue)
     }
     
-    func remove(at index: Element.Index) {
+    func removeElementAtIndex(at index: Element.Index) {
         var newValue = value
         newValue.remove(at: index)
         accept(newValue)

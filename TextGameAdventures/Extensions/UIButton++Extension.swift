@@ -9,10 +9,10 @@
 import RxSwift
 import RxCocoa
 
-extension UIButton {
-    func setTitleAndBackgroundColor(_ titleColor: UIColor, backgroundColor: UIColor, for state: UIControlState) {
-        self.setTitleColor(titleColor, for: state)
-        self.setBackgroundImage(backgroundColor.toImage(), for: state)
-        self.layer.borderColor = UIColor.white.cgColor
-    }
-}
+//extension UIButton {
+//    func setTitleAndBackgroundColor(_ titleColor: UIColor, backgroundColor: UIColor, for state: UIControlState) {
+//        self.setTitleColor(titleColor, for: state)
+//        self.setBackgroundImage(backgroundColor.toImage(), for: state)
+//        self.layer.borderColor = UIColor.white.cgColor
+//    }
+//}

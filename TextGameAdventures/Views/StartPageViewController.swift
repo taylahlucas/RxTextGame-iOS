@@ -31,7 +31,8 @@ class StartPageViewController: UIViewController {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Enter Name: "
-        label.textColor = UIColor.white
+        label.font = Font.subHeading.value
+        label.textColor = Color.whiteText.value
         
         return label
     }()
@@ -39,7 +40,7 @@ class StartPageViewController: UIViewController {
     private lazy var nameField: UITextField = {
         let input: UITextField = UITextField()
         input.translatesAutoresizingMaskIntoConstraints = false
-        input.backgroundColor = UIColor.white
+        input.backgroundColor = Color.whiteText.value
         input.borderStyle = .roundedRect
         input.placeholder = "Name"
         input.returnKeyType = .done
@@ -54,19 +55,28 @@ class StartPageViewController: UIViewController {
     
     private lazy var startButton: UIButton = {
         let button: UIButton = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = 10
         button.layer.masksToBounds = true
         button.isEnabled = false
         button.setTitle("Start Game", for: .normal)
-        button.titleLabel?.textColor = UIColor.white
-        button.setBackgroundImage(UIColor.toImage(UIColor.lightGray)(), for: .disabled)
-        button.setBackgroundImage(UIColor.toImage(UIColor.purple)(), for: .normal)
+        button.titleLabel?.font = Font.description.value
+        button.titleLabel?.textColor = Color.lightText.value
+        UIScheme.instance.setButtonScheme(for: button)
+        UIColorScheme.instance.setDisabledButtonScheme(for: button)
         button.addTarget(self, action: #selector(startGame(_:)), for: .touchUpInside)
         
         viewModel.buttonIsEnabled
             .bind(to: button.rx.isEnabled)
             .disposed(by: disposeBag)
+        
+        viewModel.buttonIsEnabled
+        .subscribe(onNext: { [weak self] enabled in
+            if (enabled) {
+                UIColorScheme.instance.setUnselectedButtonScheme(for: button)
+            } else {
+                UIColorScheme.instance.setDisabledButtonScheme(for: button)
+            }
+        })
+        .disposed(by: disposeBag)
     
         return button
     }()
@@ -74,7 +84,7 @@ class StartPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor.darkGray
+        UIScheme.instance.setViewScheme(for: self)
         
         view.addSubview(mainStack)
         
@@ -105,6 +115,7 @@ class StartPageViewController: UIViewController {
     }
 
     @objc func startGame(_ sender: UIButton) {
+        UIColorScheme.instance.setSelectedButtonScheme(for: startButton)
         self.present(GameViewController(), animated: true, completion: nil)
     }
 }
