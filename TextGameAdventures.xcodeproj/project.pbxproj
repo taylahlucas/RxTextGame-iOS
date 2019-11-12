@@ -27,6 +27,9 @@
 		D0954AA42375180100DCE1B0 /* BehaviorRelay++Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0954AA32375180100DCE1B0 /* BehaviorRelay++Extension.swift */; };
 		D0954AA62375184C00DCE1B0 /* UIColor++Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0954AA52375184C00DCE1B0 /* UIColor++Extension.swift */; };
 		D0954AA82375187600DCE1B0 /* UIButton++Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0954AA72375187600DCE1B0 /* UIButton++Extension.swift */; };
+		D0C0C42123728451001A1667 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C0C42023728451001A1667 /* Colors.swift */; };
+		D0C0C42323728479001A1667 /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C0C42223728479001A1667 /* Fonts.swift */; };
+		D0C0C426237284A8001A1667 /* Schemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C0C425237284A8001A1667 /* Schemes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,10 +68,13 @@
 
 		D0C0C41923725B62001A1667 /* HealthObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthObject.swift; sourceTree = "<group>"; };
 		D0C0C41B237270C9001A1667 /* EndGameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndGameViewController.swift; sourceTree = "<group>"; };
-		D0C0C41D23727F0C001A1667 /* EndGameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndGameViewModel.swift; sourceTree = "<group>"; };
+		D0C0C41D23727F0C001A1667 /* EndGameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = 
 		D0954AA32375180100DCE1B0 /* BehaviorRelay++Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BehaviorRelay++Extension.swift"; sourceTree = "<group>"; };
 		D0954AA52375184C00DCE1B0 /* UIColor++Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor++Extension.swift"; sourceTree = "<group>"; };
 		D0954AA72375187600DCE1B0 /* UIButton++Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton++Extension.swift"; sourceTree = "<group>"; };
+		D0C0C42023728451001A1667 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		D0C0C42223728479001A1667 /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
+		D0C0C425237284A8001A1667 /* Schemes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schemes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				D0954AA2237517E300DCE1B0 /* Extensions */,
+				D0C0C41F23728443001A1667 /* UI */,
 				D0097989236934DD000A5C34 /* Models */,
 				D0097988236934D1000A5C34 /* ViewModels */,
 				D0097987236934C6000A5C34 /* Views */,
@@ -186,6 +193,14 @@
 				D0954AA72375187600DCE1B0 /* UIButton++Extension.swift */,
 			);
 			path = Extensions;
+		D0C0C41F23728443001A1667 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				D0C0C42023728451001A1667 /* Colors.swift */,
+				D0C0C42223728479001A1667 /* Fonts.swift */,
+				D0C0C425237284A8001A1667 /* Schemes.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		FC393F5E9A4C6293A75B56D3 /* Frameworks */ = {
@@ -373,6 +388,12 @@
 				D0954AA82375187600DCE1B0 /* UIButton++Extension.swift in Sources */,
 				60EAF9D72369129000058281 /* MapObject.swift in Sources */,
 				D0954AA62375184C00DCE1B0 /* UIColor++Extension.swift in Sources */,
+				D0C0C42123728451001A1667 /* Colors.swift in Sources */,
+				60EAF9D323690D6B00058281 /* GameViewController.swift in Sources */,
+				D0C0C41A23725B63001A1667 /* HealthObject.swift in Sources */,
+				D0C0C42323728479001A1667 /* Fonts.swift in Sources */,
+				60EAF9D72369129000058281 /* MapObject.swift in Sources */,
+				D0C0C426237284A8001A1667 /* Schemes.swift in Sources */,
 				60EAF9B123690CE200058281 /* AppDelegate.swift in Sources */,
 				60EAF9D523690D7700058281 /* GameViewModel.swift in Sources */,
 				D0C0C41E23727F0C001A1667 /* EndGameViewModel.swift in Sources */,
