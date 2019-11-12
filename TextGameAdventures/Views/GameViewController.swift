@@ -165,9 +165,7 @@ class GameViewController: UIViewController {
         button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
         button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
         button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .highlighted)
-        
-//        button.addTarget(self, action: #selector(playerAction(_:)), for: .touchUpInside)
-        
+
         button.rx.tap
             .bind(to: viewModel.actionSelected)
             .disposed(by: disposeBag)
@@ -176,20 +174,11 @@ class GameViewController: UIViewController {
             .asObservable()
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
-    
-        // TO DO -- When action button tapped, call the moveTo function
-        viewModel.actionIsSelected
-//            .do(onNext: { selected in
-//                print("selected: ", selected)
-//            })
-//            .subscribe(onNext: { [weak self] _ in self?.viewModel.isMovingTo })
-            .subscribe(onNext: { [weak self] _ in self?.viewModel.test() })
-            .disposed(by: disposeBag)
-        
+
         viewModel.actionButtonEnabled
             .bind(to: button.rx.isEnabled)
             .disposed(by: disposeBag)
-        
+
         return button
     }()
     
@@ -264,22 +253,11 @@ class GameViewController: UIViewController {
                 }
             })
             .disposed(by: disposeBag)
+
+        viewModel.setCurrentPosition
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+            .subscribe()
+            .disposed(by: disposeBag)
     }
-    
-    // MARK: - Button Functions
-    @objc func playerAction(_ sender: UIButton) {
-//        if () {
-//            viewModel.setCurrentPosition(direction: 1)
-//        }
-//        else if (viewModel.downIsSelected) {
-//            viewModel.setCurrentPosition(direction: 2)
-//        }
-//        else if (viewModel.rightIsSelected) {
-//            viewModel.setCurrentPosition(direction: 3)
-//        }
-//        else if (viewModel.leftIsSelected) {
-//            viewModel.setCurrentPosition(direction: 4)
-//        }
-    }
-        
 }
