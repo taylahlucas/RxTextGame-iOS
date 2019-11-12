@@ -84,7 +84,6 @@ class GameViewModel {
             })
     }()
     
-
     lazy var setCurrentPosition: Observable<Void> = {
         actionSelected
             .withLatestFrom(selectedButton)

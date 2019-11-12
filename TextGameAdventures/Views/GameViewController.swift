@@ -57,39 +57,22 @@ class GameViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("U", for: .normal)
         button.layer.borderWidth = 2
-
+        
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
+        
         button.rx.tap
             .bind(to: viewModel.upSelected)
             .disposed(by: disposeBag)
         
         viewModel.upIsSelected
-
-        UIScheme.instance.setButtonScheme(for: button)
-        button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
-        
-        viewModel.upSelected
             .asObservable()
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
         
-        button.rx.tap
-            .subscribe(onNext: {
-                self.viewModel.upSelected.value = !self.viewModel.upSelected.value
-            })
-            .disposed(by: disposeBag)
-        
         viewModel.upButtonEnabled
             .bind(to: button.rx.isEnabled)
-            .disposed(by: disposeBag)
-        
-        viewModel.upButtonEnabled
-            .subscribe(onNext: { [weak self] enabled in
-                if (enabled) {
-                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
-                } else {
-                    UIColorScheme.instance.setDisabledButtonScheme(for: button)
-                }
-            })
             .disposed(by: disposeBag)
         
         return button
@@ -100,17 +83,14 @@ class GameViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("L", for: .normal)
         button.layer.borderWidth = 2
-        UIScheme.instance.setButtonScheme(for: button)
-        button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
-    
+
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
+        
         button.rx.tap
-             .bind(to: viewModel.leftSelected)
-             .disposed(by: disposeBag)
-//        button.rx.tap
-//            .subscribe(onNext: {
-//                self.viewModel.leftSelected.value = !self.viewModel.leftSelected.value
-//            })
-//            .disposed(by: disposeBag)
+            .bind(to: viewModel.leftSelected)
+            .disposed(by: disposeBag)
         
         viewModel.leftIsSelected
             .asObservable()
@@ -120,17 +100,6 @@ class GameViewController: UIViewController {
         viewModel.leftButtonEnabled
             .bind(to: button.rx.isEnabled)
             .disposed(by: disposeBag)
-        
-        viewModel.leftButtonEnabled
-            .subscribe(onNext: { [weak self] enabled in
-                if (enabled) {
-                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
-                } else {
-                    UIColorScheme.instance.setDisabledButtonScheme(for: button)
-                }
-            })
-            .disposed(by: disposeBag)
-        
 
         return button
     }()
@@ -140,9 +109,10 @@ class GameViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("D", for: .normal)
         button.layer.borderWidth = 2
-
-        UIScheme.instance.setButtonScheme(for: button)
-        button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
+        
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
 
         button.rx.tap
             .bind(to: viewModel.downSelected)
@@ -153,18 +123,9 @@ class GameViewController: UIViewController {
             .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
          
-        viewModel.downButtonEnabled
-            .bind(to: button.rx.isEnabled)
-            .disposed(by: disposeBag)
         
         viewModel.downButtonEnabled
-            .subscribe(onNext: { [weak self] enabled in
-                if (enabled) {
-                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
-                } else {
-                    UIColorScheme.instance.setDisabledButtonScheme(for: button)
-                }
-            })
+            .bind(to: button.rx.isEnabled)
             .disposed(by: disposeBag)
   
         return button
@@ -175,9 +136,11 @@ class GameViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("R", for: .normal)
         button.layer.borderWidth = 2
-        UIScheme.instance.setButtonScheme(for: button)
-        button.addTarget(self, action: #selector(setButtonSelected(_:)), for: .touchUpInside)
-
+        
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .selected)
+        
         button.rx.tap
             .bind(to: viewModel.rightSelected)
             .disposed(by: disposeBag)
@@ -190,16 +153,6 @@ class GameViewController: UIViewController {
         viewModel.rightButtonEnabled
             .bind(to: button.rx.isEnabled)
             .disposed(by: disposeBag)
-        
-        viewModel.rightButtonEnabled
-            .subscribe(onNext: { [weak self] enabled in
-                if (enabled) {
-                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
-                } else {
-                    UIColorScheme.instance.setDisabledButtonScheme(for: button)
-                }
-            })
-            .disposed(by: disposeBag)
 
         return button
     }()
@@ -209,9 +162,11 @@ class GameViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("ACTION", for: .normal)
         button.layer.borderWidth = 2
-        UIScheme.instance.setButtonScheme(for: button)
-        button.addTarget(self, action: #selector(playerAction(_:)), for: .touchUpInside)
         
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.darkGray, for: .disabled)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.lightGray, for: .normal)
+//        button.setTitleAndBackgroundColor(UIColor.white, backgroundColor: UIColor.purple, for: .highlighted)
+
         button.rx.tap
             .bind(to: viewModel.actionSelected)
             .disposed(by: disposeBag)
@@ -224,16 +179,6 @@ class GameViewController: UIViewController {
         viewModel.actionButtonEnabled
             .bind(to: button.rx.isEnabled)
             .disposed(by: disposeBag)
-        
-        viewModel.buttonSelected
-            .subscribe(onNext: { [weak self] selected in
-                if (selected) {
-                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
-                } else {
-                    UIColorScheme.instance.setDisabledButtonScheme(for: button)
-                }
-            })
-            .disposed(by: disposeBag)
 
         return button
     }()
@@ -242,15 +187,8 @@ class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        setupLayout()
-        setupBindings()
-    }
-    
-    // MARK: - Layout
-    
-    private func setupLayout() {
-        UIScheme.instance.setViewScheme(for: self)
+        
+        view.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
         
         view.addSubview(nameLabel)
         view.addSubview(statusLabel)
@@ -261,6 +199,13 @@ class GameViewController: UIViewController {
         view.addSubview(rightButton)
         view.addSubview(actionButton)
         
+        setupLayout()
+        setupBindings()
+    }
+    
+    // MARK: - Layout
+    
+    private func setupLayout() {
         NSLayoutConstraint.activate([
             nameLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -308,7 +253,7 @@ class GameViewController: UIViewController {
                         self?.statusLabel.text = "Dead"
                         
                         self?.viewModel.setCurrentStatus(status: .dead)
-                        let endString: String = "Game Over " + (self?.viewModel.playerName ?? "") + ",\n you died!"
+                        let endString: String = "GAME OVER " + (self?.viewModel.playerName ?? "") + ", YOU DIED!"
                         
                         self?.viewModel.resetGame(endString: endString)
                         self?.present(EndGameViewController(), animated: true, completion: nil)
@@ -336,12 +281,18 @@ class GameViewController: UIViewController {
             .observeOn(MainScheduler.asyncInstance)
             .subscribe({ [weak self] (value) in
                 if (value.element ?? false) {
-                    let endString: String = "Congratulations " + (self?.viewModel.playerName ?? "") + ",\n you survived!"
+                    let endString: String = "CONGRATULATIONS " + (self?.viewModel.playerName ?? "") + ", YOU SURVIVED!"
                     
                     self?.viewModel.resetGame(endString: endString)
                     self?.present(EndGameViewController(), animated: true, completion: nil)
                 }
             })
+            .disposed(by: disposeBag)
+
+        viewModel.setCurrentPosition
+            .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .observeOn(MainScheduler.instance)
+            .subscribe()
             .disposed(by: disposeBag)
     }
 }

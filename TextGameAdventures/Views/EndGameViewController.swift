@@ -25,23 +25,11 @@ class EndGameViewController: UIViewController {
         return stack
     }()
     
-    lazy var chestResultStack: UIStackView = {
-        let stack: UIStackView = UIStackView()
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .vertical
-        stack.alignment = .trailing
-        stack.distribution = .fillEqually
-        
-        return stack
-    }()
-    
     lazy var resultLabel: UILabel = {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = viewModel.resultString
-        label.textColor = Color.whiteText.value
-        label.font = Font.heading.value
-        label.numberOfLines = 2
+        label.textColor = UIColor.white
         
         return label
     }()
@@ -50,9 +38,7 @@ class EndGameViewController: UIViewController {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Chests Collected: " + viewModel.chestsCollectedString
-        label.textColor = Color.whiteText.value
-        label.font = Font.description.value
-        label.textAlignment = .right
+        label.textColor = UIColor.white
         
         return label
     }()
@@ -61,9 +47,7 @@ class EndGameViewController: UIViewController {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Total Chests: " + viewModel.totalChestsString
-        label.textColor = Color.whiteText.value
-        label.font = Font.description.value
-        label.textAlignment = .right
+        label.textColor = UIColor.white
         
         return label
     }()
@@ -73,9 +57,12 @@ class EndGameViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 10
         button.layer.masksToBounds = true
+        
         button.setTitle("Play Again?", for: .normal)
-        button.titleLabel?.textColor = Color.whiteText.value
-        UIScheme.instance.setButtonScheme(for: button)
+        button.titleLabel?.textColor = UIColor.white
+        button.setBackgroundImage(UIColor.toImage(UIColor.lightGray)(), for: .disabled)
+        button.setBackgroundImage(UIColor.toImage(UIColor.purple)(), for: .normal)
+        
         button.addTarget(self, action: #selector(playAgain), for: .touchUpInside)
         
         return button
@@ -84,27 +71,21 @@ class EndGameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+        
+        view.addSubview(mainStack)
+        mainStack.addArrangedSubview(resultLabel)
+        mainStack.addArrangedSubview(chestsCollectedLabel)
+        mainStack.addArrangedSubview(totalChestsLabel)
+        mainStack.addArrangedSubview(playAgainButton)
+        
         setupLayout()
     }
     
     // MARK: - Layout
     
     func setupLayout() {
-        UIScheme.instance.setViewScheme(for: self)
-        
-        view.addSubview(mainStack)
-        
-        chestResultStack.addArrangedSubview(chestsCollectedLabel)
-        chestResultStack.addArrangedSubview(totalChestsLabel)
-        
-        mainStack.addArrangedSubview(resultLabel)
-        mainStack.addArrangedSubview(chestResultStack)
-        mainStack.addArrangedSubview(playAgainButton)
-        
         NSLayoutConstraint.activate([
-            chestResultStack.widthAnchor.constraint(equalToConstant: 160),
-            chestResultStack.heightAnchor.constraint(equalToConstant: 80),
-
             mainStack.widthAnchor.constraint(equalToConstant: view.frame.width),
             mainStack.heightAnchor.constraint(equalToConstant: 300),
             mainStack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -116,7 +97,6 @@ class EndGameViewController: UIViewController {
     
     // MARK: - Button Functions
     @objc func playAgain() {
-        UIColorScheme.instance.setHighlightedButtonScheme(for: playAgainButton)
         self.dismiss(animated: true, completion: nil)
     }
 }
