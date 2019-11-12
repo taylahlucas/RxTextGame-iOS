@@ -210,7 +210,6 @@ class GameViewModel {
                 return false
             }
     }()
-    
         
     // MARK: - Functions
     
