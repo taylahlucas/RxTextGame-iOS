@@ -21,6 +21,7 @@
 		6F0EC3A703BA766BBB045A34 /* Pods_TextGameAdventuresTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B75442E7337FA42E7950EBC /* Pods_TextGameAdventuresTests.framework */; };
 		D0093A2B236B9A0300390515 /* StartPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0093A2A236B9A0300390515 /* StartPageViewModel.swift */; };
 		D009798B23693535000A5C34 /* StartPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D009798A23693535000A5C34 /* StartPageViewController.swift */; };
+		D02C3D722B0B884400103C3E /* TextGameAdventuresTests.xctest in Resources */ = {isa = PBXBuildFile; fileRef = 60EAF9C323690CE500058281 /* TextGameAdventuresTests.xctest */; };
 		D03A0BD4237A7938002C7D3D /* Schemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03A0BD3237A7938002C7D3D /* Schemes.swift */; };
 		D03A0BD6237A7952002C7D3D /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03A0BD5237A7952002C7D3D /* Colors.swift */; };
 		D03A0BD8237A796C002C7D3D /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03A0BD7237A796C002C7D3D /* Fonts.swift */; };
@@ -308,6 +309,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D02C3D722B0B884400103C3E /* TextGameAdventuresTests.xctest in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -561,6 +563,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = YR66YB3CSW;
 				INFOPLIST_FILE = TextGameAdventures/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -580,6 +583,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = YR66YB3CSW;
 				INFOPLIST_FILE = TextGameAdventures/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

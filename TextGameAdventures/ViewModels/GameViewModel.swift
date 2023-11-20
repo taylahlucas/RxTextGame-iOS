@@ -2,7 +2,7 @@
 //  GameViewModel.swift
 //  TextGameAdventures
 //
-//  Created by James Furlong on 30/10/19.
+//  Created by Taylah Lucas on 30/10/19.
 //  Copyright © 2019 Archa. All rights reserved.
 //
 
@@ -74,10 +74,10 @@ class GameViewModel {
             ) { ($0, $1, $2, $3) }
             .map { up, down, left, right in
                 if (up) { return 1 }
-                if (down) { return 2 }
-                if (left) { return 3 }
-                if (right) { return 4 }
-                return 0
+                else if (down) { return 2 }
+                else if (left) { return 3 }
+                else if (right) { return 4 }
+                else { return 0 }
             }
             .do(onNext: { [weak self] value in
                 self?.selectedButton.accept(value)
@@ -115,7 +115,6 @@ class GameViewModel {
     
     lazy var upIsSelected: Observable<Bool> = {
         upSelected
-            .do(onNext: { _ in print("up selected")})
             .subscribe({ _ in
                 self.upRelay.accept(!self.upRelay.value)
             })
@@ -270,7 +269,6 @@ class GameViewModel {
         
         self.currentPosition.replaceElementAtIndex(0, at: 0)
         self.currentPosition.replaceElementAtIndex(0, at: 1)
-        print("self.currentPos: ", self.currentPosition.value)
 
         setCurrentStatus(status: .healthy)
         

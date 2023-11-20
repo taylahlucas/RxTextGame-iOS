@@ -2,7 +2,7 @@
 //  GameViewController.swift
 //  TextGameAdventures
 //
-//  Created by James Furlong on 30/10/19.
+//  Created by Taylah Lucas on 30/10/19.
 //  Copyright © 2019 Archa. All rights reserved.
 //
 
@@ -48,6 +48,7 @@ class GameViewController: UIViewController {
         let label: UILabel = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = Color.whiteText.value
+        label.text="test"
         
         return label
     }()
@@ -73,8 +74,6 @@ class GameViewController: UIViewController {
             .subscribe(onNext: { value in
                 if (value) {
                     UIColorScheme.instance.setSelectedButtonScheme(for: button)
-                } else {
-                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
                 }
             })
             .disposed(by: disposeBag)
@@ -89,6 +88,9 @@ class GameViewController: UIViewController {
             .subscribe(onNext: { value in
                 if (!value) {
                     UIColorScheme.instance.setDisabledButtonScheme(for: button)
+                }
+                else {
+                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
                 }
             })
             .disposed(by: disposeBag)
@@ -117,8 +119,6 @@ class GameViewController: UIViewController {
             .subscribe(onNext: { value in
                 if (value) {
                     UIColorScheme.instance.setSelectedButtonScheme(for: button)
-                } else {
-                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
                 }
             })
             .disposed(by: disposeBag)
@@ -133,6 +133,9 @@ class GameViewController: UIViewController {
             .subscribe(onNext: { value in
                 if (!value) {
                     UIColorScheme.instance.setDisabledButtonScheme(for: button)
+                }
+                else {
+                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
                 }
             })
             .disposed(by: disposeBag)
@@ -161,8 +164,6 @@ class GameViewController: UIViewController {
             .subscribe(onNext: { value in
                 if (value) {
                     UIColorScheme.instance.setSelectedButtonScheme(for: button)
-                } else {
-                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
                 }
             })
             .disposed(by: disposeBag)
@@ -177,6 +178,9 @@ class GameViewController: UIViewController {
             .subscribe(onNext: { value in
                 if (!value) {
                     UIColorScheme.instance.setDisabledButtonScheme(for: button)
+                }
+                else {
+                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
                 }
             })
             .disposed(by: disposeBag)
@@ -192,12 +196,7 @@ class GameViewController: UIViewController {
         button.rx.tap
             .bind(to: viewModel.rightSelected)
             .disposed(by: disposeBag)
-        
-        viewModel.rightIsSelected
-            .asObservable()
-            .bind(to: button.rx.isSelected)
-            .disposed(by: disposeBag)
-        
+                
         viewModel.rightIsSelected
             .asObservable()
             .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
@@ -205,10 +204,13 @@ class GameViewController: UIViewController {
             .subscribe(onNext: { value in
                 if (value) {
                     UIColorScheme.instance.setSelectedButtonScheme(for: button)
-                } else {
-                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
                 }
             })
+            .disposed(by: disposeBag)
+        
+        viewModel.rightIsSelected
+            .asObservable()
+            .bind(to: button.rx.isSelected)
             .disposed(by: disposeBag)
         
         viewModel.rightButtonEnabled
@@ -221,6 +223,9 @@ class GameViewController: UIViewController {
             .subscribe(onNext: { value in
                 if (!value) {
                     UIColorScheme.instance.setDisabledButtonScheme(for: button)
+                }
+                else {
+                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
                 }
             })
             .disposed(by: disposeBag)
@@ -267,6 +272,9 @@ class GameViewController: UIViewController {
                 if (!value) {
                     UIColorScheme.instance.setDisabledButtonScheme(for: button)
                 }
+                else {
+                    UIColorScheme.instance.setUnselectedButtonScheme(for: button)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -302,7 +310,7 @@ class GameViewController: UIViewController {
             statusLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
             statusLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             descLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            descLabel.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 20),
+            descLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 60),
             actionButton.heightAnchor.constraint(equalToConstant: 60),
             actionButton.widthAnchor.constraint(equalToConstant: 250),
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -355,9 +363,6 @@ class GameViewController: UIViewController {
                         self?.viewModel.resetGame(endString: endString)
                         self?.present(EndGameViewController(), animated: true, completion: nil)
                     }
-                }
-                else {
-                    self?.descLabel.text = ""
                 }
             })
             .disposed(by: disposeBag)

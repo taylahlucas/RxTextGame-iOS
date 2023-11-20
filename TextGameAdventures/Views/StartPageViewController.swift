@@ -71,10 +71,8 @@ class StartPageViewController: UIViewController {
         viewModel.buttonIsEnabled
         .subscribe(onNext: { [weak self] enabled in
             if (enabled) {
-                print("enabled")
                 UIColorScheme.instance.setUnselectedButtonScheme(for: button)
             } else {
-                print("not enabled")
                 UIColorScheme.instance.setDisabledButtonScheme(for: button)
             }
         })

@@ -82,7 +82,6 @@ class UIColorScheme {
     }
     
     func setHighlightedButtonScheme(for button: UIButton) {
-        print("here")
         button.setTitleAndBackgroundColor(Color.whiteText.value, backgroundColor: Color.lightBackground.value, for: .selected)
     }
     

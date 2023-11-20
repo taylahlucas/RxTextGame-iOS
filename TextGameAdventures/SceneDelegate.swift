@@ -2,7 +2,7 @@
 //  SceneDelegate.swift
 //  TextGameAdventures
 //
-//  Created by James Furlong on 30/10/19.
+//  Created by Taylah Lucas on 30/10/19.
 //  Copyright © 2019 Archa. All rights reserved.
 //
 
@@ -16,7 +16,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             let vc = StartPageViewController()
-//            let vc = EndGameViewController()
             
             window.rootViewController = vc
             self.window = window

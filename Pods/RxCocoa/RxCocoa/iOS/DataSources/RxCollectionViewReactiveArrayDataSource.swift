@@ -43,9 +43,9 @@ class RxCollectionViewReactiveArrayDataSourceSequenceWrapper<S: Sequence>
     , RxCollectionViewDataSourceType {
     typealias Element = S
 
-    override init(cellFactory: @escaping CellFactory) {
-        super.init(cellFactory: cellFactory)
-    }
+//    override init(cellFactory: @escaping CellFactory) {
+//        super.init(cellFactory: cellFactory)
+//    }
     
     func collectionView(_ collectionView: UICollectionView, observedEvent: Event<S>) {
         Binder(self) { collectionViewDataSource, sectionModels in

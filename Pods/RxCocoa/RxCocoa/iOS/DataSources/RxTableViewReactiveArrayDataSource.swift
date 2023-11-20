@@ -43,9 +43,9 @@ class RxTableViewReactiveArrayDataSourceSequenceWrapper<S: Sequence>
     , RxTableViewDataSourceType {
     typealias Element = S
 
-    override init(cellFactory: @escaping CellFactory) {
-        super.init(cellFactory: cellFactory)
-    }
+//    override init(cellFactory: @escaping CellFactory) {
+//        super.init(cellFactory: cellFactory)
+//    }
 
     func tableView(_ tableView: UITableView, observedEvent: Event<S>) {
         Binder(self) { tableViewDataSource, sectionModels in
