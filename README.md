@@ -1,5 +1,19 @@
 # Taylah_RxTextGame
 
+A simple text game built using Rx and Observables in iOS Swift.
+
+# Pods
+
+- RxSwift
+- RxCocoa
+- RxDataSources
+
+## Instructions
+
+To play this game, select one of Up, Down, Left, Right to navigate through an invisible maze filled with traps and treasures.
+
+https://github.com/taylahlucas/RxTextGame-iOS/assets/53559103/365303f2-9291-41ce-8b37-d677e87b9292
+
 ## Tasks
 
 * On start, ask for the user name
